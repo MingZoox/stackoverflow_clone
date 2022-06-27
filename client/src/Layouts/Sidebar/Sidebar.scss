@@ -1,0 +1,37 @@
+.sidebar {
+    border-right: 1px solid hsl(210, 8%, 90%);
+    min-height: 700px;
+    width: 164px;
+    padding-top: 24px;
+
+    .sidebar-nav {
+        width: 164px;
+        position: sticky;
+        top: 60px;
+
+        a {
+            text-decoration: none;
+            display: block;
+            height: 35px;
+            padding: 8px 8px 8px 30px;
+            position: relative;
+
+            &:hover {
+                color: hsl(210, 8%, 5%);
+            }
+        }
+
+        p {
+            color: #6a737c;
+            font-size: 11px;
+            margin: 16px 0 4px 8px;
+        }
+
+        .target-active {
+            background-color: #f1f2f3;
+            color: #0c0d0e;
+            font-weight: bold;
+            border-right: 3px solid hsl(27, 90%, 55%);
+        }
+    }
+}

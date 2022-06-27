@@ -1,0 +1,69 @@
+.ask-question-page {
+    padding-top: 53px;
+    margin: 0 100px;
+    height: 1050px;
+
+    .ask-question-page__header {
+        height: 130px;
+        padding: 50px 0;
+        background-image: url("../../../public/Img/ask-question-bg.svg");
+        background-repeat: no-repeat;
+        background-position: right;
+        color: #232629;
+        font-size: 27px;
+    }
+
+    .ask-question-page--ask {
+        width: 1000px;
+        height: 700px;
+        background-color: white;
+        box-shadow: 0 0px 5px rgb(194 194 194);
+        padding: 25px;
+
+        .ask__title,.ask__tags {
+            color: #0c0d0e;
+            font-size: 18px;
+            font-weight: 500;
+
+            input {
+                display: block;
+                margin: 15px 0;
+                padding-left: 10px;
+                width: 100%;
+                height: 35px;
+                border-radius: 3px;
+                border: 1px solid rgb(211, 211, 211);
+                outline: none;
+
+                &:focus {
+                    box-shadow: 0 0 5px hsl(206, 90%, 69.5%);
+                }
+            }
+        }
+
+        .ask__body {
+            color: #0c0d0e;
+            font-size: 18px;
+            font-weight: 500;
+
+            .w-md-editor-show-live {
+                margin: 15px 0;
+            }
+        }
+    }
+
+    .ask__submmit {
+        color: #ffffff;
+        background-color: #0a95ff;
+        width: 160px;
+        height: 40px;
+        padding: 10px 12px;
+        border-radius: 3px;
+        margin-top: 30px;
+
+        &:hover {
+            cursor: pointer;
+            background-color: hsl(206, 100%, 40%);
+        }
+    }
+}

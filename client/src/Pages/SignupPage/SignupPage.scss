@@ -1,0 +1,126 @@
+.signup-page {
+    padding: 53px 300px 0 300px;
+    height: 800px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+    .signup__form {
+        width: 350px;
+        height: 600px;
+        color: black;
+        background-color: white;
+        padding: 25px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgb(192, 192, 192);
+
+        .form__displayname {
+            padding-top: 20px;
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .form__email {
+            font-size: 15px;
+            font-weight: bold;
+            padding-top: 20px;
+        }
+
+        .form__password {
+            font-size: 15px;
+            font-weight: bold;
+            padding-top: 20px;
+        }
+
+        .password__validation {
+            color: #6a737c;
+            font-size: 12px;
+            width: 80%;
+            padding-top: 10px;
+            padding-bottom: 10px;
+        }
+
+        input {
+            width: 290px;
+            margin-top: 5px;
+            padding: 6px;
+            height: 35px;
+            border-radius: 3px;
+            border: 1px solid rgb(185, 185, 185);
+            outline: none;
+
+            &:focus {
+                box-shadow: 0 0 8px rgb(75, 177, 255);
+            }
+        }
+
+        .input-submit {
+            height: 39px;
+            margin-top: 20px;
+            color: white;
+            background-color: #0a95ff;
+
+            &:hover {
+                cursor: pointer;
+                background-color: hsl(206, 100%, 40%);
+            }
+        }
+
+        .signup__policy {
+            color: #6a737c;
+            font-size: 12px;
+            padding-top: 20px;
+
+            span {
+                font-size: 13px;
+                color: #0074cc;
+                font-weight: 400;
+
+                &:hover {
+                    color: hsl(206, 100%, 52%);
+                    cursor: pointer;
+                }
+            }
+        }
+
+        .signup__login {
+            font-size: 13px;
+            color: #232629;
+            width: 200px;
+            margin: 30px auto;
+
+            a {
+                margin-left: 5px;
+                font-size: 13px;
+                color: #0074cc;
+                font-weight: 400;
+                text-decoration: none;
+
+                &:hover {
+                    color: hsl(206, 100%, 52%);
+                }
+            }
+        }
+    }
+
+    .signup__introduction {
+        padding-right: 50px;
+
+        .heading {
+            color: #232629;
+            font-size: 27px;
+            padding-bottom: 30px;
+        }
+
+        .introduction {
+            line-height: 20px;
+            padding-bottom: 15px;
+            font-size: 15px;
+            color: #232629;
+
+            svg {
+                margin-right: 10px;
+            }
+        }
+    }
+}

@@ -1,0 +1,184 @@
+@mixin JoinButton() {
+    > a {
+        padding: 15px 55px;
+        border-radius: 10px;
+        color: white;
+        text-decoration: none;
+        background-color: hsl(27, 90%, 50%);
+
+        &:hover {
+            opacity: 0.9;
+        }
+    }
+
+    p {
+        margin-top: 30px;
+        position: relative;
+
+        &:after {
+            border: 16px solid hsl(27, 95%, 90%);
+            border-bottom: 16px solid transparent;
+            border-left: 16px solid transparent;
+            right: -30px;
+            bottom: -61px;
+            content: "";
+            position: absolute;
+        }
+    }
+}
+
+.homepage {
+    padding: 93px 40px 90px 40px;
+    position: relative;
+
+    .introduction {
+        height: 900px;
+        border-radius: 10px;
+        background: linear-gradient(180deg, hsl(210, 8%, 15%) 0%, hsl(210, 8%, 35%) 130%);
+        padding-top: 50px;
+
+        .introduction__decoration img:first-child {
+            top: 103px;
+            right: 150px;
+            position: absolute;
+        }
+
+        .introduction__decoration img:nth-child(2) {
+            top: 353px;
+            left: 180px;
+            position: absolute;
+        }
+
+        .introduction__start {
+            height: 280px;
+            width: 480px;
+            background-color: hsl(27, 95%, 90%);
+            margin: auto;
+            text-align: center;
+            border-radius: 10px 10px 0 10px;
+            padding: 30px;
+
+            h2 {
+                padding: 20px 0;
+                font-size: 20px;
+                font-weight: 300;
+                color: #232629;
+                margin-bottom: 20px;
+            }
+
+            @include JoinButton();
+        }
+
+        .introduction__title {
+            padding: 70px 0;
+            font-size: 50px;
+            color: white;
+            text-align: center;
+            font-weight: bold;
+            white-space: pre-wrap;
+
+            span {
+                color: hsl(27, 90%, 50%);
+                font-size: inherit;
+                font-weight: bold;
+            }
+        }
+
+        .introduction__statistical {
+            display: flex;
+            justify-content: space-between;
+            padding: 40px 180px;
+
+            > div {
+                width: 200px;
+            }
+
+            .number {
+                text-align: center;
+                color: #f8f9f9;
+                font-size: 20px;
+                font-weight: bold;
+            }
+
+            .content {
+                color: #9fa6ad;
+                text-align: center;
+                padding-top: 15px;
+                line-height: 20px;
+            }
+        }
+    }
+
+    .introduction__column {
+        background: linear-gradient(0deg, hsl(27, 95%, 90%) 30%, white);
+        height: 900px;
+        width: 600px;
+        margin: -100px auto 50px auto;
+        box-shadow: 0 12px 11px rgb(0 0 0 / 4%), 0 100px 80px rgb(0 0 0 / 7%);
+        border-radius: 10px;
+        padding-top: 50px;
+        text-align: center;
+
+        .column__logo {
+            height: 50px;
+            width: 188px;
+            background-image: url("../../../public/Img/sprites.svg");
+            margin: 0 auto 30px auto;
+        }
+
+        .column__title {
+            font-size: 26px;
+            font-weight: bold;
+            color: #232629;
+            margin: 30px auto 15px auto;
+            width: 500px;
+        }
+
+        .column__content {
+            font-size: 18px;
+            width: 500px;
+            margin: 0 auto 50px auto;
+        }
+
+        @include JoinButton();
+
+        p {
+            &::after {
+                content: none;
+            }
+        }
+    }
+
+    .companies-used {
+        text-align: center;
+        margin-bottom: 30px;
+
+        .companies-used__heading {
+            color: #6a737c;
+            font-size: 18px;
+            padding: 50px 0;
+        }
+
+        .companies-used__logos {
+            height: 130px;
+            img {
+                padding: 20px;
+            }
+        }
+
+        .companies-used__nav span {
+            display: inline-block;
+            height: 6px;
+            width: 24px;
+            background-color: #babfc4;
+            margin-right: 15px;
+            margin-top: 30px;
+            border-radius: 3px;
+
+            &:hover {
+                cursor: pointer;
+                background-color: hsl(210, 8%, 55%);
+            }
+        }
+    }
+}

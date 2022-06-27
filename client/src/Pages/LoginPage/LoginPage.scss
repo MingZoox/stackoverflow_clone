@@ -1,0 +1,89 @@
+.loginpage {
+    padding-top: 53px;
+    height: 800px;
+    padding-top: 170px;
+    width: 100%;
+
+    .loginpage__logo {
+        margin-left: 49%;
+    }
+
+    .loginpage__form {
+        width: 300px;
+        height: 250px;
+        color: black;
+        background-color: white;
+        padding: 25px;
+        margin: 50px auto;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgb(192, 192, 192);
+
+        .form__email {
+            font-size: 15px;
+            font-weight: bold;
+        }
+
+        .form__password {
+            font-size: 15px;
+            font-weight: bold;
+            padding-top: 20px;
+
+            a {
+                font-size: 13px;
+                color: #0074cc;
+                font-weight: 400;
+                text-decoration: none;
+                margin-left: 65px;
+
+                &:hover {
+                    color: hsl(206, 100%, 52%);
+                }
+            }
+        }
+
+        input {
+            width: 240px;
+            margin-top: 5px;
+            padding: 6px;
+            height: 35px;
+            border-radius: 3px;
+            border: 1px solid rgb(185, 185, 185);
+            outline: none;
+
+            &:focus {
+                box-shadow: 0 0 8px rgb(75, 177, 255);
+            }
+        }
+
+        input:last-child {
+            height: 39px;
+            margin-top: 20px;
+            color: white;
+            background-color: #0a95ff;
+
+            &:hover {
+                cursor: pointer;
+                background-color: hsl(206, 100%, 40%);
+            }
+        }
+    }
+
+    .loginpage__signup {
+        font-size: 13px;
+        color: #232629;
+        width: 200px;
+        margin: 50px auto;
+
+        a {
+            font-size: 13px;
+            color: #0074cc;
+            font-weight: 400;
+            text-decoration: none;
+            margin-left: 5px;
+
+            &:hover {
+                color: hsl(206, 100%, 52%);
+            }
+        }
+    }
+}
