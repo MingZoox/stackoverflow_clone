@@ -1,26 +1,31 @@
 import { useState, useEffect } from "react";
 import AdminPageContent from "./AdminPageContent";
-import { getAllUsers } from "../../Api/user-api";
+import { getUsers } from "../../Api/user-api";
 import { getAllPosts } from "../../Api/question-api";
+import AuthContext from "../../Auth/AuthProvider";
 import "./AdminPage.scss";
+import { useContext } from "react";
+
+export const Pages = {
+    USER: "User",
+    POST: "Post",
+};
 
 function AdminPage() {
-    const Pages = {
-        USER: "User",
-        POST: "Post",
-    };
-
     const [data, setData] = useState([]);
     const [pageName, setPageName] = useState(Pages.USER);
+    // const { auth } = useContext(AuthContext);
+    // console.log("admin");
+    // console.log(auth);
 
     useEffect(() => {
-        getAllUsers().then((res) => {
-            setData(res);
+        getUsers(1, 10).then((res) => {
+            setData(res.users);
         });
     }, []);
 
     function handleSideUser() {
-        getAllUsers().then((res) => {
+        getUsers(1, 10).then((res) => {
             setData(res);
             setPageName(Pages.USER);
         });

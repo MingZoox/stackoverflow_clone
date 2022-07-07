@@ -1,6 +1,6 @@
+import Cookies from "js-cookie";
 import userSchema from "./validation-user";
-import { login } from "../Api/user-api";
-import { getCurrentUser } from "../Api/user-api";
+import { login, getCurrentUser } from "../Api/user-api";
 
 export const handleLogin = (email, password, setAuth, navigate, location) => {
     const from = location.state?.from?.pathname || "/";
@@ -13,12 +13,13 @@ export const handleLogin = (email, password, setAuth, navigate, location) => {
         })
         .then((response) => {
             login(email, password).then((responseData) => {
-                if (responseData === "OK") {
+                if (responseData?.token) {
+                    Cookies.set("Authorization", responseData.token);
                     getCurrentUser().then((currentUser) => {
                         setAuth(currentUser);
                     });
                     navigate(from, { replace: true });
-                } else alert("ERROR: Please correct the email and password !");
+                }
             });
         })
         .catch((err) => {

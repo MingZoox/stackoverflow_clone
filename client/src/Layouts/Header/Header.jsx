@@ -16,14 +16,14 @@ function Header() {
     function handleLogoutBtn() {
         if (window.confirm("Are you sure you want to log out ?")) {
             setAuth({});
-            Cookies.remove("connect.sid");
+            Cookies.remove("Authorization");
             alert("Logout success");
             navigate("/");
         }
     }
 
     function handleProfileBtn() {
-        navigate(`/users/${auth?.id}`);
+        navigate(`/users/${auth?._id}`);
     }
 
     return (
@@ -44,7 +44,7 @@ function Header() {
             {auth?.username ? (
                 <React.Fragment>
                     <div className="header__profile" onClick={handleProfileBtn}>
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png"></img>
+                        <img src={auth?.avatar}></img>
                     </div>
                     <HeaderNotification />
                     <div className="header__logout" onClick={handleLogoutBtn}>

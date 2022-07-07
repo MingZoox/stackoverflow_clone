@@ -56,7 +56,7 @@ async function getUsersPagination(
     if (page <= 0 || page > totalPages || limit <= 0) throw new Error("Parameters aren't accepted");
 
     const users: Array<UserDocument> | null = await User.find()
-        .select("username reputation avatar")
+        .select("username email password reputation avata about role")
         .limit(limit)
         .skip((page - 1) * limit);
 

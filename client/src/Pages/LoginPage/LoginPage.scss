@@ -28,15 +28,15 @@
             font-weight: bold;
             padding-top: 20px;
 
-            a {
+            span {
                 font-size: 13px;
                 color: #0074cc;
                 font-weight: 400;
-                text-decoration: none;
                 margin-left: 65px;
 
                 &:hover {
                     color: hsl(206, 100%, 52%);
+                    cursor: pointer;
                 }
             }
         }

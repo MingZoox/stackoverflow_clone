@@ -35,8 +35,8 @@ function Footer() {
                 <a href="/">Facebook</a>
                 <a href="/">Twitter</a>
                 <p>
-                    Site design / logo © 2022 Stack Exchange Inc; user
-                    contributions licensed under cc by-sa. rev 2022.4.19.41984
+                    Site design / logo © 2022 Stack Exchange Inc; user contributions licensed under
+                    cc by-sa. rev 2022.4.19.41984
                 </p>
             </div>
         </div>

@@ -10,9 +10,7 @@ function UserProfilePage() {
     const { idUser } = useParams();
     const { auth } = useContext(AuthContext);
     const [user, setUser] = useState({});
-    const [userAvatar, setUserAvatar] = useState("");
-    const [userName, setUserName] = useState("");
-    const [userAbout, setUserAbout] = useState("");
+    const [avatar, setAvatar] = useState(null);
     const [viewEdit, setViewEdit] = useState(false);
 
     useEffect(() => {
@@ -21,13 +19,15 @@ function UserProfilePage() {
         });
     }, []);
 
-    function handleSubmit() {
-        const profileUploaded = {
-            userAvatar: userAvatar,
-            userName: userName,
-            userAbout: userAbout,
-        };
-        updateProfile(profileUploaded).then((res) => alert(res));
+    function handleSubmit(e) {
+        e.preventDefault();
+        if (window.confirm("Are you sure you want to update your profile ?")) {
+            updateProfile(user, avatar).then((response) => {
+                if (response) {
+                    alert("Update success !!");
+                }
+            });
+        }
     }
 
     return (
@@ -35,9 +35,9 @@ function UserProfilePage() {
             <Sidebar />
             <div className="user-profile">
                 <div className="profile__header">
-                    <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/React-icon.svg/1200px-React-icon.svg.png"></img>
-                    <h1>{user?.name}</h1>
-                    {idUser === auth.id && (
+                    <img src={user?.avatar}></img>
+                    <h1>{user?.username}</h1>
+                    {idUser === auth?._id && (
                         <div
                             className="edit-profile-btn"
                             onClick={() => {
@@ -51,20 +51,23 @@ function UserProfilePage() {
                 {viewEdit ? (
                     <div className="profile__edit">
                         <form onSubmit={handleSubmit}>
-                            <span>Avatar</span>{" "}
+                            <span>Avatar</span>
                             <input
                                 type="file"
-                                value={userAvatar}
-                                onChange={(e) => setUserAvatar(e.target.files[0])}></input>
-                            <span>Name</span>{" "}
+                                onChange={(event) => {
+                                    setAvatar(event.target.files[0]);
+                                }}></input>
+                            <span>Name</span>
                             <input
                                 type="text"
-                                value={userName}
-                                onChange={(e) => setUserName(e.target.value)}></input>
-                            <span>About</span>{" "}
+                                value={user.username}
+                                onChange={(e) =>
+                                    setUser({ ...user, username: e.target.value })
+                                }></input>
+                            <span>About</span>
                             <textarea
-                                value={userAbout}
-                                onChange={(e) => setUserAbout(e.target.value)}
+                                value={user.about}
+                                onChange={(e) => setUser({ ...user, about: e.target.value })}
                             />
                             <input type="submit" value="Submit" />
                         </form>

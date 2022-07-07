@@ -7,10 +7,10 @@ export const login = async (email, password) => {
     });
 
     try {
-        const { data } = await axios.post("login", payload);
+        const { data } = await axios.post("users/login", payload);
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
@@ -22,48 +22,69 @@ export const signup = async (displayname, email, password) => {
     });
 
     try {
-        const { data } = await axios.post("register", payload);
+        const { data } = await axios.post("users/register", payload);
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
-export const getAllUsers = async () => {
+export const getUsers = async (page, limit) => {
     try {
-        const { data } = await axios.get("getAllUsers");
+        const { data } = await axios.get(`users?page=${page}&limit=${limit}`);
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
 export const getUser = async (idUser) => {
     try {
-        return { name: "NameUser", reputation: 123, about: "About me !" };
+        const { data } = await axios.get(`users/${idUser}`);
+        return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
-export const updateProfile = async (profileUploaded) => {
+export const updateProfile = async (profileUploaded, avatar) => {
     const payload = new URLSearchParams({
-        ...profileUploaded,
-        file: profileUploaded.userAvatar,
+        username: profileUploaded.username,
+        about: profileUploaded.about,
     });
 
     try {
-        return "OK";
+        if (avatar) {
+            let data = new FormData();
+            data.append("file", avatar);
+            await axios.put(`users/avatar`, data);
+        }
+        const { data } = await axios.put(`users/${profileUploaded._id}`, payload);
+        return data;
     } catch (error) {
-        console.log(error);
+        if (error.response.status === 413) alert("Image too large !!");
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
 export const getCurrentUser = async () => {
     try {
-        const { data } = await axios.get("currentUser");
+        const { data } = await axios.get("users/me");
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
+export const sendForgotPasswordMail = async (forgotEmail) => {
+    const payload = new URLSearchParams({
+        email: forgotEmail,
+    });
+
+    try {
+        const { data } = await axios.post("users/forget", payload);
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };

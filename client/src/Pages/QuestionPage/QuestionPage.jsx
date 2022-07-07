@@ -9,11 +9,13 @@ function QuestionPage() {
     let { idQuestion } = useParams();
     const [comment, setComment] = useState();
     const [question, setQuestion] = useState();
+
     useEffect(() => {
         getPost(idQuestion).then((res) => {
             setQuestion(res);
         });
     }, []);
+
     return (
         <div className="question-page">
             <Sidebar />

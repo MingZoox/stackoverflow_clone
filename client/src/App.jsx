@@ -22,7 +22,7 @@ function App() {
     const { setAuth } = useContext(AuthContext);
 
     useEffect(() => {
-        Cookies.get("connect.sid") &&
+        Cookies.get("Authorization") &&
             getCurrentUser().then((currentUser) => {
                 setAuth(currentUser);
             });
@@ -48,9 +48,9 @@ function App() {
                 <Route path="*" element={<NotFoundPage />} />
 
                 {/* protected routes */}
-                <Route element={<RequireAuth allowedRole="admin" />}></Route>
-
-                <Route path="admin" element={<AdminPage />} />
+                <Route element={<RequireAuth allowedRole="admin" />}>
+                    <Route path="admin" element={<AdminPage />} />
+                </Route>
             </Routes>
 
             <Footer />

@@ -1,5 +1,6 @@
 import { useState, useContext } from "react";
 import { handleLogin } from "../../Helpers/handle-login";
+import { sendForgotPasswordMail } from "../../Api/user-api";
 import { useNavigate, useLocation } from "react-router-dom";
 import AuthContext from "../../Auth/AuthProvider";
 import "./LoginPage.scss";
@@ -7,6 +8,8 @@ import "./LoginPage.scss";
 function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isForgotFormActived, setIsForgotFormActived] = useState(false);
+    const [forgotMail, setForgotMail] = useState("");
 
     const { setAuth } = useContext(AuthContext);
     const navigate = useNavigate();
@@ -16,13 +19,30 @@ function LoginPage() {
         setEmail(e.target.value);
     }
 
+    function handleChangeForgotEmail(e) {
+        setForgotMail(e.target.value);
+    }
+
     function handleChangePassword(e) {
         setPassword(e.target.value);
+    }
+
+    function handleActiveForgotForm(e) {
+        setIsForgotFormActived(true);
     }
 
     function handleSubmit(e) {
         e.preventDefault();
         handleLogin(email, password, setAuth, navigate, location);
+    }
+
+    function handleSubmitForgotPassword(e) {
+        e.preventDefault();
+        sendForgotPasswordMail(forgotMail).then((res) => {
+            if (res) {
+                alert("Mail sent successfully !!");
+            }
+        });
     }
 
     return (
@@ -37,16 +57,28 @@ function LoginPage() {
                 </svg>
             </div>
             <div className="loginpage__form">
-                <form onSubmit={handleSubmit}>
-                    <div className="form__email">Email</div>
-                    <input type="text" value={email} onChange={handleChangeEmail} />
-                    <div className="form__password">
-                        Password
-                        <a href="/">Forgot password?</a>
-                    </div>
-                    <input type="password" value={password} onChange={handleChangePassword} />
-                    <input type="submit" value="Log in" />
-                </form>
+                {isForgotFormActived ? (
+                    <form onSubmit={handleSubmitForgotPassword}>
+                        <p>
+                            Forgot your account’s password or having trouble logging into your Team?
+                            Enter your email address and we’ll send you a recovery link.
+                        </p>
+                        <div className="form__email">Email</div>
+                        <input type="text" value={forgotMail} onChange={handleChangeForgotEmail} />
+                        <input type="submit" value="Send recovery email" />
+                    </form>
+                ) : (
+                    <form onSubmit={handleSubmit}>
+                        <div className="form__email">Email</div>
+                        <input type="text" value={email} onChange={handleChangeEmail} />
+                        <div className="form__password">
+                            Password
+                            <span onClick={handleActiveForgotForm}>Forgot password?</span>
+                        </div>
+                        <input type="password" value={password} onChange={handleChangePassword} />
+                        <input type="submit" value="Log in" />
+                    </form>
+                )}
             </div>
             <div className="loginpage__signup">
                 Don’t have an account?
