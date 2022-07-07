@@ -48,9 +48,9 @@ function App() {
                 <Route path="*" element={<NotFoundPage />} />
 
                 {/* protected routes */}
-                <Route element={<RequireAuth allowedRole="admin" />}>
-                    <Route path="admin" element={<AdminPage />} />
-                </Route>
+                <Route element={<RequireAuth allowedRole="admin" />}></Route>
+                
+                <Route path="admin" element={<AdminPage />} />
             </Routes>
 
             <Footer />

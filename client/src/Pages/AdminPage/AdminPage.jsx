@@ -1,10 +1,9 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState, useEffect } from "react";
 import AdminPageContent from "./AdminPageContent";
 import { getUsers } from "../../Api/user-api";
 import { getAllPosts } from "../../Api/question-api";
-import AuthContext from "../../Auth/AuthProvider";
 import "./AdminPage.scss";
-import { useContext } from "react";
 
 export const Pages = {
     USER: "User",
@@ -14,18 +13,19 @@ export const Pages = {
 function AdminPage() {
     const [data, setData] = useState([]);
     const [pageName, setPageName] = useState(Pages.USER);
-    // const { auth } = useContext(AuthContext);
-    // console.log("admin");
-    // console.log(auth);
+    const [totalPages, setTotalPages] = useState(1);
+
+    const LimitRecordInPage = 5;
 
     useEffect(() => {
-        getUsers(1, 10).then((res) => {
+        getUsers(1, LimitRecordInPage).then((res) => {
             setData(res.users);
+            setTotalPages(res.totalPages);
         });
     }, []);
 
     function handleSideUser() {
-        getUsers(1, 10).then((res) => {
+        getUsers(1, LimitRecordInPage).then((res) => {
             setData(res);
             setPageName(Pages.USER);
         });
@@ -43,22 +43,28 @@ function AdminPage() {
             <div className="admin__sidebar">
                 <div className="sidebar-nav">
                     <h4>ADMIN</h4>
-                    <a
-                        href="#"
+                    <span
                         onClick={handleSideUser}
                         className={pageName === Pages.USER ? "target-active" : ""}>
                         {Pages.USER}
-                    </a>
-                    <a
-                        href="#"
+                    </span>
+                    <span
                         onClick={handleSidePost}
                         className={pageName === Pages.POST ? "target-active" : ""}>
                         {Pages.POST}
-                    </a>
+                    </span>
                 </div>
             </div>
 
-            {data.length && <AdminPageContent data={data} pageName={pageName} />}
+            {data.length && (
+                <AdminPageContent
+                    data={data}
+                    setData={setData}
+                    totalPages={totalPages}
+                    pageName={pageName}
+                    LimitRecordInPage={LimitRecordInPage}
+                />
+            )}
         </div>
     );
 }

@@ -29,15 +29,6 @@ export const signup = async (displayname, email, password) => {
     }
 };
 
-export const getUsers = async (page, limit) => {
-    try {
-        const { data } = await axios.get(`users?page=${page}&limit=${limit}`);
-        return data;
-    } catch (error) {
-        error.response.data?.message && alert(error.response.data?.message);
-    }
-};
-
 export const getUser = async (idUser) => {
     try {
         const { data } = await axios.get(`users/${idUser}`);
@@ -47,11 +38,28 @@ export const getUser = async (idUser) => {
     }
 };
 
+export const getUsers = async (page, limit) => {
+    try {
+        const { data } = await axios.get(`users?page=${page}&limit=${limit}`);
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
+export const addUser = async (userInfo) => {
+    const payload = new URLSearchParams(userInfo);
+
+    try {
+        const { data } = await axios.post("admin/users", payload);
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
 export const updateProfile = async (profileUploaded, avatar) => {
-    const payload = new URLSearchParams({
-        username: profileUploaded.username,
-        about: profileUploaded.about,
-    });
+    const payload = new URLSearchParams(profileUploaded);
 
     try {
         if (avatar) {
@@ -59,10 +67,19 @@ export const updateProfile = async (profileUploaded, avatar) => {
             data.append("file", avatar);
             await axios.put(`users/avatar`, data);
         }
-        const { data } = await axios.put(`users/${profileUploaded._id}`, payload);
+        const { data } = await axios.put(`users/${profileUploaded._id || "empty"}`, payload);
         return data;
     } catch (error) {
         if (error.response.status === 413) alert("Image too large !!");
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
+export const deleteUser = async (idUser) => {
+    try {
+        const { data } = await axios.delete(`users/${idUser}`);
+        return data;
+    } catch (error) {
         error.response.data?.message && alert(error.response.data?.message);
     }
 };

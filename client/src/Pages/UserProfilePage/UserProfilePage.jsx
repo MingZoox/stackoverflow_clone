@@ -1,6 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../../Auth/AuthProvider";
 import Sidebar from "../../Layouts/Sidebar/Sidebar";
+import userSchema from "../../Helpers/validation-user";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { getUser, updateProfile } from "../../Api/user-api";
@@ -22,11 +23,16 @@ function UserProfilePage() {
     function handleSubmit(e) {
         e.preventDefault();
         if (window.confirm("Are you sure you want to update your profile ?")) {
-            updateProfile(user, avatar).then((response) => {
-                if (response) {
-                    alert("Update success !!");
-                }
-            });
+            // check if password valid or not
+            if (user.password && !/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/.test(user.password)) {
+                alert("Password invalid");
+            } else {
+                updateProfile(user, avatar).then((response) => {
+                    if (response) {
+                        alert("Update success !!");
+                    }
+                });
+            }
         }
     }
 
@@ -63,6 +69,13 @@ function UserProfilePage() {
                                 value={user.username}
                                 onChange={(e) =>
                                     setUser({ ...user, username: e.target.value })
+                                }></input>
+
+                            <span>Password</span>
+                            <input
+                                type="password"
+                                onChange={(e) =>
+                                    setUser({ ...user, password: e.target.value })
                                 }></input>
                             <span>About</span>
                             <textarea

@@ -3,6 +3,7 @@ import * as userServices from "../services/user.service";
 
 const addUser = async function (req: Request, res: Response) {
     try {
+        console.log("hello ?");
         const createdUserId = await userServices.addUser(req);
         return res.status(200).json(createdUserId);
     } catch (error: any) {

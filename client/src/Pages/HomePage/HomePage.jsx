@@ -1,5 +1,5 @@
-import HomePageTitle from "../../Components/HomePageTitle/HomePageTitle";
-import HomePageCompanies from "../../Components/HomePageCompanies/HomePageCompanies";
+import HomePageTitle from "./HomePageTitle";
+import HomePageCompanies from "./HomePageCompanies";
 import { Link } from "react-router-dom";
 import "./HomePage.scss";
 

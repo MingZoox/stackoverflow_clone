@@ -2,7 +2,7 @@ import { useNavigate, Link } from "react-router-dom";
 import Cookies from "js-cookie";
 import React, { useContext } from "react";
 import AuthContext from "../../Auth/AuthProvider";
-import HeaderNotification from "../../Components/HeaderNotification/HeaderNotification";
+import HeaderNotification from "./HeaderNotification";
 import "./Header.scss";
 
 function Header() {
