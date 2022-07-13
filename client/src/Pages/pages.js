@@ -5,8 +5,9 @@ import QuestionsPage from "./QuestionsPage/QuestionsPage";
 import NotFoundPage from "./NotFoundPage/NotFoundPage";
 import AdminPage from "./AdminPage/AdminPage";
 import AskQuestionPage from "./AskQuestionPage/AskQuestionPage";
-import UserProfilePage from "./UserProfilePage/UserProfilePage"
+import UserProfilePage from "./UserProfilePage/UserProfilePage";
 import QuestionPage from "./QuestionPage/QuestionPage";
+import TagsPage from "./TagsPage/TagsPage";
 
 export {
     HomePage,
@@ -18,4 +19,5 @@ export {
     UserProfilePage,
     AskQuestionPage,
     QuestionPage,
+    TagsPage,
 };

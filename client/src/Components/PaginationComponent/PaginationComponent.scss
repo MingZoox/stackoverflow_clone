@@ -1,0 +1,27 @@
+.pagination {
+    display: flex;
+    align-items: center;
+    margin-left: 40%;
+    overflow-x: scroll;
+    max-width: 200px;
+    padding-bottom: 10px;
+
+    .target-active {
+        background-color: hsl(27deg, 90%, 55%);
+        color: white;
+    }
+
+    span {
+        margin-left: 15px;
+        padding: 6px;
+        font-weight: 400;
+        font-size: 16px;
+        border-radius: 3px;
+
+        &:hover {
+            cursor: pointer;
+            background-color: hsl(27deg, 90%, 55%);
+            color: white;
+        }
+    }
+}

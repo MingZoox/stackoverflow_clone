@@ -7,12 +7,15 @@ import { Role } from "../models/user.model";
 import questionSchema from "../utils/validation/question.validation";
 
 async function addQuestion(req: Request): Promise<ObjectId> {
+    req.body.tags = req.body.tags.split(",");
+
     const questionValidation = questionSchema.validate(req.body);
     if (questionValidation.error) {
         throw new Error(questionValidation.error.details[0].message);
     }
 
     const userId: ObjectId = req.user._id;
+
     const question: QuestionDocument = new Question({ ...req.body, user: userId });
     const createdQuestion = await question.save();
     return createdQuestion._id;
@@ -44,9 +47,10 @@ async function getQuestion(req: Request): Promise<any> {
 
 async function getQuestionsPagination(
     req: Request
-): Promise<{ questions: Array<QuestionDocument>; totalPages: number }> {
+): Promise<{ questions: Array<QuestionDocument>; totalPages: number; totalQuestions: number }> {
     const page: number = parseInt(req.query.page as string, 10);
     const limit: number = parseInt(req.query.limit as string, 10);
+    const order: string = req.query.order as string;
 
     const totalQuestions: number = await Question.countDocuments();
     if (!totalQuestions) throw new Error("Query to database got error");
@@ -54,14 +58,28 @@ async function getQuestionsPagination(
 
     if (page <= 0 || page > totalPages || limit <= 0) throw new Error("Parameters aren't accepted");
 
-    const questions: Array<QuestionDocument> | null = await Question.find()
-        .populate("user", "username avatar")
-        .select("title")
-        .limit(limit)
-        .skip((page - 1) * limit);
+    let questions: Array<QuestionDocument> | null = null;
+
+    if (order === "newest") {
+        questions = await Question.find()
+            .populate("user", "username avatar")
+            .sort({ createdAt: -1 })
+            .select("title tags content usersLiked")
+            .limit(limit)
+            .skip((page - 1) * limit);
+    } else if (order === "score") {
+        questions = await Question.find()
+            .populate("user", "username avatar")
+            .select("title tags content usersLiked");
+        questions.sort(
+            (questionA, questionB) => questionB.usersLiked.length - questionA.usersLiked.length
+        );
+        questions = questions.slice((page - 1) * limit, (page - 1) * limit + limit);
+    }
 
     if (!questions) throw new Error("Query to database got error");
-    return { questions, totalPages };
+
+    return { questions, totalPages, totalQuestions };
 }
 
 async function updateQuestionContent(req: Request): Promise<ObjectId> {

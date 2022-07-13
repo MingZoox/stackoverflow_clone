@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
-import { postQuestion } from "../../Api/question-api";
+import { addQuestion } from "../../Api/question-api";
 import "./AskQuestionPage.scss";
 
 function AskQuestionPage() {
@@ -20,20 +20,18 @@ function AskQuestionPage() {
 
     function submmitQuestion() {
         if (window.confirm("Are you sure you want to public your question ?")) {
-            postQuestion(title, content, tags).then((res) => {
-                if (res.postId) {
-                    alert("Success " + res.postId);
+            addQuestion(title, content, tags).then((res) => {
+                if (res) {
+                    alert("Post questions success !!");
                     navigate("/questions");
-                } else alert("ERROR: " + res);
+                }
             });
         }
     }
 
     return (
         <div className="ask-question-page">
-            <div className="ask-question-page__header">
-                Ask a public question
-            </div>
+            <div className="ask-question-page__header">Ask a public question</div>
             <div className="ask-question-page--ask">
                 <div className="ask__title">
                     Title
@@ -46,11 +44,7 @@ function AskQuestionPage() {
                 </div>
                 <div className="ask__body" data-color-mode="light">
                     Body
-                    <MDEditor
-                        value={content}
-                        onChange={setContent}
-                        height="430"
-                    />
+                    <MDEditor value={content} onChange={setContent} height="430" />
                 </div>
                 <div className="ask__tags">
                     Tags

@@ -55,12 +55,21 @@ async function getUsersPagination(
 
     if (page <= 0 || page > totalPages || limit <= 0) throw new Error("Parameters aren't accepted");
 
-    const users: Array<UserDocument> | null = await User.find()
-        .select("username email password reputation avata about role")
-        .limit(limit)
-        .skip((page - 1) * limit);
+    let users: Array<UserDocument> | null = null;
+    if (req.user?.role !== "admin") {
+        users = await User.find()
+            .select("username email password reputation avata about role")
+            .limit(limit)
+            .skip((page - 1) * limit);
+    } else {
+        users = await User.find()
+            .select("username reputation avata")
+            .limit(limit)
+            .skip((page - 1) * limit);
+    }
 
     if (!users) throw new Error("Query to database got error");
+
     return { users, totalPages };
 }
 

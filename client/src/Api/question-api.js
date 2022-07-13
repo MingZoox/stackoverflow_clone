@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export const postQuestion = async (title, content, tags) => {
+export const addQuestion = async (title, content, tags) => {
     const payload = new URLSearchParams({
         title: title,
         content: content,
@@ -8,51 +8,60 @@ export const postQuestion = async (title, content, tags) => {
     });
 
     try {
-        const { data } = await axios.post("addPost", payload);
+        const { data } = await axios.post("questions", payload);
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
-export const getPost = async (idQuestion) => {
+export const getQuestion = async (questionId) => {
     try {
-        const { data } = await axios.get(`getPost/${idQuestion}`);
+        const { data } = await axios.get(`questions/${questionId}`);
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
-export const getAllPosts = async () => {
+export const getQuestions = async (page, limit, order) => {
     try {
-        const { data } = await axios.get("getAllPosts");
+        const { data } = await axios.get(`questions?page=${page}&limit=${limit}&order=${order}`);
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
-export const deletePost = async (idQuestion) => {
+export const deleteQuestion = async (questionId) => {
     const payload = new URLSearchParams({
-        _id: idQuestion,
+        _id: questionId,
     });
 
     try {
-        const { data } = await axios.delete("deletePost", payload);
+        const { data } = await axios.delete("questions", payload);
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };
 
-export const updatePost = async (post) => {
-    const payload = new URLSearchParams(post);
-
+export const voteQuestion = async (questionId) => {
     try {
-        const { data } = await axios.put(`updatePost?_id=${post._id}`, payload);
+        const { data } = await axios.put(`questions/like/${questionId}`);
         return data;
     } catch (error) {
-        console.log(error);
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
+export const updateQuestion = async (question) => {
+    const payload = new URLSearchParams(question);
+
+    try {
+        const { data } = await axios.put(`questions?_id=${question._id}`, payload);
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
     }
 };

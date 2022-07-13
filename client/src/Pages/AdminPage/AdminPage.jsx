@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 import AdminPageContent from "./AdminPageContent";
 import { getUsers } from "../../Api/user-api";
-import { getAllPosts } from "../../Api/question-api";
+// import { getAllPosts } from "../../Api/question-api";
 import "./AdminPage.scss";
 
 export const Pages = {
@@ -32,10 +32,10 @@ function AdminPage() {
     }
 
     function handleSidePost() {
-        getAllPosts().then((res) => {
-            setData(res);
-            setPageName(Pages.POST);
-        });
+        // getAllPosts().then((res) => {
+        //     setData(res);
+        //     setPageName(Pages.POST);
+        // });
     }
 
     return (

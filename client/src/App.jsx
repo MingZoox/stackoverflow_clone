@@ -11,6 +11,7 @@ import {
     AskQuestionPage,
     QuestionPage,
     UserProfilePage,
+    TagsPage,
 } from "./Pages/pages";
 import RequireAuth from "./Auth/RequireAuth";
 import { Routes, Route } from "react-router-dom";
@@ -45,12 +46,16 @@ function App() {
                     <Route path=":idQuestion" element={<QuestionPage />} />
                     <Route path="ask" element={<AskQuestionPage />} />
                 </Route>
+                <Route path="tags">
+                    <Route index element={<TagsPage />} />
+                    <Route path=":tag" element={<QuestionsPage />} />
+                </Route>
                 <Route path="*" element={<NotFoundPage />} />
 
                 {/* protected routes */}
-                <Route element={<RequireAuth allowedRole="admin" />}></Route>
-                
-                <Route path="admin" element={<AdminPage />} />
+                <Route element={<RequireAuth allowedRole="admin" />}>
+                    <Route path="admin" element={<AdminPage />} />
+                </Route>
             </Routes>
 
             <Footer />

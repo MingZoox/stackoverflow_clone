@@ -3,7 +3,7 @@ import * as tagServices from "../services/tag.service";
 
 const getTags = async function (req: Request, res: Response) {
     try {
-        const tags = await tagServices.getAllTagsAndCount(req);
+        const tags = await tagServices.getTagsPagination(req);
         return res.status(200).json(tags);
     } catch (error: any) {
         if (error.message) return res.status(400).json({ message: error.message });
@@ -13,8 +13,8 @@ const getTags = async function (req: Request, res: Response) {
 
 const getQuestionsByTag = async function (req: Request, res: Response) {
     try {
-        const questions = await tagServices.getQuestionsByTag(req);
-        return res.status(200).json(questions);
+        const { questions, totalPages, totalQuestions } = await tagServices.getQuestionsByTag(req);
+        return res.status(200).json({ questions, totalPages, totalQuestions });
     } catch (error: any) {
         if (error.message) return res.status(400).json({ message: error.message });
         return res.status(500).json(error);

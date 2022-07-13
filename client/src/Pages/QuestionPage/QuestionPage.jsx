@@ -6,20 +6,15 @@ import { useState, useEffect } from "react";
 import { getPost } from "../../Api/question-api";
 
 function QuestionPage() {
-    let { idQuestion } = useParams();
+    const { idQuestion } = useParams();
     const [comment, setComment] = useState();
     const [question, setQuestion] = useState();
 
-    useEffect(() => {
-        getPost(idQuestion).then((res) => {
-            setQuestion(res);
-        });
-    }, []);
+    useEffect(() => {}, []);
 
     return (
         <div className="question-page">
             <Sidebar />
-            {/* {idQuestion} */}
             <div>
                 <div className="question-content">
                     <MDEditor.Markdown source={comment} />

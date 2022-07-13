@@ -23,8 +23,10 @@ const getQuestion = async function (req: Request, res: Response) {
 
 const getQuestionsPagination = async function (req: Request, res: Response) {
     try {
-        const { questions, totalPages } = await questionServices.getQuestionsPagination(req);
-        return res.status(200).json({ questions, totalPages });
+        // eslint-disable-next-line operator-linebreak
+        const { questions, totalPages, totalQuestions } =
+            await questionServices.getQuestionsPagination(req);
+        return res.status(200).json({ questions, totalPages, totalQuestions });
     } catch (error: any) {
         if (error.message) return res.status(400).json({ message: error.message });
         return res.status(500).json(error);

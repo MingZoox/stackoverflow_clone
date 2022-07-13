@@ -1,0 +1,86 @@
+.tags-page {
+    padding: 53px 100px 0 100px;
+    display: flex;
+
+    .tags-page__content {
+        padding: 24px;
+
+        .tags-page__header {
+            .tags-page__title {
+                color: #232629;
+                font-size: 27px;
+                margin-bottom: 16px;
+            }
+
+            .tags-page__introduction {
+                color: #232629;
+                font-size: 15px;
+                margin-bottom: 36px;
+                max-width: 600px;
+            }
+
+            .tags-page__filter {
+                position: relative;
+                margin-bottom: 30px;
+
+                svg {
+                    position: absolute;
+                    top: 9px;
+                    left: 10px;
+                }
+
+                input {
+                    width: 250px;
+                    height: 35px;
+                    padding-left: 36px;
+                    border-radius: 3px;
+                    border: 1px solid rgb(211, 211, 211);
+                    outline: none;
+
+                    &:focus {
+                        box-shadow: 0 0 5px hsl(206, 90%, 69.5%);
+                    }
+                }
+            }
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            width: 1200px;
+            margin-bottom: 30px;
+
+            .tag {
+                width: 250px;
+                height: 100px;
+                padding: 15px;
+                border: 1px solid hsl(210, 8%, 90%);
+                margin-bottom: 10px;
+                margin-right: 10px;
+                border-radius: 5px;
+
+                .tag__title {
+                    margin-top: 5px;
+
+                    a {
+                        text-decoration: none;
+                        padding: 7px;
+                        border-radius: 3px;
+                        color: #39739d;
+                        background-color: #e1ecf4;
+                        margin-right: 5px;
+
+                        &:hover {
+                            color: #2c5877;
+                            background-color: #d0e3f1;
+                        }
+                    }
+                }
+
+                .tag__num-questions {
+                    margin-top: 30px;
+                }
+            }
+        }
+    }
+}
