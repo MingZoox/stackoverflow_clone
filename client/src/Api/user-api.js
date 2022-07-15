@@ -38,9 +38,13 @@ export const getUser = async (idUser) => {
     }
 };
 
-export const getUsers = async (page, limit) => {
+export const getUsers = async (page, limit, filter) => {
     try {
-        const { data } = await axios.get(`users?page=${page}&limit=${limit}`);
+        let query = `users?page=${page}&limit=${limit}`;
+        if (filter) {
+            query = `users?page=${page}&limit=${limit}&filter=${filter}`;
+        }
+        const { data } = await axios.get(query);
         return data;
     } catch (error) {
         error.response.data?.message && alert(error.response.data?.message);

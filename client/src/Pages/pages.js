@@ -8,6 +8,7 @@ import AskQuestionPage from "./AskQuestionPage/AskQuestionPage";
 import UserProfilePage from "./UserProfilePage/UserProfilePage";
 import QuestionPage from "./QuestionPage/QuestionPage";
 import TagsPage from "./TagsPage/TagsPage";
+import UsersPage from "./UsersPage/UsersPage";
 
 export {
     HomePage,
@@ -20,4 +21,5 @@ export {
     AskQuestionPage,
     QuestionPage,
     TagsPage,
+    UsersPage,
 };

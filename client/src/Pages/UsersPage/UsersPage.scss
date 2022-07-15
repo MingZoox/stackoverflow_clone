@@ -1,0 +1,82 @@
+.users-page {
+    padding: 53px 100px 0 100px;
+    display: flex;
+
+    .users-page__content {
+        padding: 24px;
+
+        .users-page__header {
+            .users-page__title {
+                color: #232629;
+                font-size: 27px;
+                margin-bottom: 16px;
+            }
+
+            .users-page__filter {
+                position: relative;
+                margin-bottom: 30px;
+
+                svg {
+                    position: absolute;
+                    top: 9px;
+                    left: 10px;
+                }
+
+                input {
+                    width: 250px;
+                    height: 35px;
+                    padding-left: 36px;
+                    border-radius: 3px;
+                    border: 1px solid rgb(211, 211, 211);
+                    outline: none;
+                    margin-bottom: 10px;
+
+                    &:focus {
+                        box-shadow: 0 0 5px hsl(206, 90%, 69.5%);
+                    }
+                }
+            }
+        }
+
+        .users {
+            display: flex;
+            flex-wrap: wrap;
+            width: 1200px;
+            margin-bottom: 30px;
+
+            .user {
+                width: 250px;
+                height: 100px;
+                padding: 15px;
+                border: 1px solid hsl(210, 8%, 90%);
+                margin-bottom: 10px;
+                margin-right: 10px;
+                border-radius: 5px;
+                display: flex;
+
+                img {
+                    width: 60px;
+                    height: 60px;
+                    margin-right: 20px;
+                    border-radius: 5px;
+                }
+
+                .user__info {
+                    .user__info-username {
+                        color: #0074cc;
+                        text-decoration: none;
+                        font-size: 18px;
+
+                        &:hover {
+                            color: #0a95ff;
+                        }
+                    }
+                    .user__info-reputation {
+                        margin-top: 15px;
+                        font-size: 16px;
+                    }
+                }
+            }
+        }
+    }
+}

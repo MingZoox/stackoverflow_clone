@@ -12,6 +12,7 @@ import {
     QuestionPage,
     UserProfilePage,
     TagsPage,
+    UsersPage,
 } from "./Pages/pages";
 import RequireAuth from "./Auth/RequireAuth";
 import { Routes, Route } from "react-router-dom";
@@ -37,6 +38,7 @@ function App() {
                 {/* public routes */}
                 <Route index element={<HomePage />} />
                 <Route path="users">
+                    <Route index element={<UsersPage />} />
                     <Route path="login" element={<LoginPage />} />
                     <Route path="signup" element={<SignupPage />} />
                     <Route path=":idUser" element={<UserProfilePage />} />

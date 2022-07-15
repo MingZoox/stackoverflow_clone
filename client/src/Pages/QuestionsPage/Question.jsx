@@ -12,9 +12,9 @@ function Question({ questionId, votes, title, tags, user }) {
                 <div className="question-content__tag-user">
                     <div className="question-content__tag">
                         {tags.map((tag, index) => (
-                            <Link key={index} to={`/tags/${tag}`}>
+                            <a key={index} href={`/tags/${tag}`}>
                                 {tag}
-                            </Link>
+                            </a>
                         ))}
                     </div>
                     <div className="question-content__user">

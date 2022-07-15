@@ -48,27 +48,32 @@ async function getUsersPagination(
 ): Promise<{ users: Array<UserDocument>; totalPages: number }> {
     const page: number = parseInt(req.query.page as string, 10);
     const limit: number = parseInt(req.query.limit as string, 10);
-
-    const totalUsers: number = await User.countDocuments();
-    if (!totalUsers) throw new Error("Query to database got error");
-    const totalPages = Math.ceil(totalUsers / limit);
-
-    if (page <= 0 || page > totalPages || limit <= 0) throw new Error("Parameters aren't accepted");
+    const filter: string = req.query.filter as string;
 
     let users: Array<UserDocument> | null = null;
     if (req.user?.role !== "admin") {
         users = await User.find()
-            .select("username email password reputation avata about role")
+            .select("username reputation avatar")
             .limit(limit)
             .skip((page - 1) * limit);
     } else {
         users = await User.find()
-            .select("username reputation avata")
+            .select("username email password reputation avatar about role")
             .limit(limit)
             .skip((page - 1) * limit);
     }
 
     if (!users) throw new Error("Query to database got error");
+
+    if (filter) {
+        users = users.filter((user) => user.username.startsWith(filter));
+    }
+
+    const totalUsers: number = users.length;
+    if (!totalUsers) throw new Error("Query to database got error");
+    const totalPages = Math.ceil(totalUsers / limit);
+
+    if (page <= 0 || page > totalPages || limit <= 0) throw new Error("Parameters aren't accepted");
 
     return { users, totalPages };
 }
