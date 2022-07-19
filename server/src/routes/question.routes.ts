@@ -10,6 +10,7 @@ questionRouter.get("/questions/:id", questionControllers.getQuestion);
 questionRouter.post("/questions", authen, questionControllers.addQuestion);
 
 questionRouter.put("/questions/like/:id", authen, questionControllers.toggleLikeQuestion);
+questionRouter.put("/questions/dislike/:id", authen, questionControllers.toggleDislikeQuestion);
 questionRouter.put("/questions/:id", authen, questionControllers.updateQuestionContent);
 
 export default questionRouter;

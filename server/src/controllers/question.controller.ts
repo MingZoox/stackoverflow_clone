@@ -63,6 +63,16 @@ const toggleLikeQuestion = async function (req: Request, res: Response) {
     }
 };
 
+const toggleDislikeQuestion = async function (req: Request, res: Response) {
+    try {
+        const questionId = await questionServices.toggleDislikeQuestion(req);
+        return res.status(200).json(questionId);
+    } catch (error: any) {
+        if (error.message) return res.status(400).json({ message: error.message });
+        return res.status(500).json(error);
+    }
+};
+
 export {
     addQuestion,
     getQuestion,
@@ -70,4 +80,5 @@ export {
     updateQuestionContent,
     deleteQuestion,
     toggleLikeQuestion,
+    toggleDislikeQuestion,
 };

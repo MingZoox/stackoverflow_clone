@@ -2,6 +2,8 @@ import { Request } from "express";
 import jwt from "jsonwebtoken";
 import { ObjectId } from "mongoose";
 import env from "../configs/env.config";
+import { getAnswersByQuestionId } from "./answer.service";
+import Comment, { CommentDocument } from "../models/comment.model";
 import Question, { QuestionDocument } from "../models/question.model";
 import { Role } from "../models/user.model";
 import questionSchema from "../utils/validation/question.validation";
@@ -18,30 +20,45 @@ async function addQuestion(req: Request): Promise<ObjectId> {
 
     const question: QuestionDocument = new Question({ ...req.body, user: userId });
     const createdQuestion = await question.save();
+    if (!createdQuestion) throw new Error("Query to database got error");
+
     return createdQuestion._id;
 }
 
-async function getQuestion(req: Request): Promise<any> {
+async function getQuestion(req: Request): Promise<object> {
     const question: QuestionDocument | null = await Question.findById(req.params.id).populate(
         "user",
         "username avatar"
     );
     if (!question) throw new Error("Couldn't find question");
 
-    const authToken = req.cookies.Authorization;
-    const userAuthenticatedId: any = jwt.verify(authToken, env.ACCESS_TOKEN_SECRET as string);
+    // get user id to check has current user liked or not
+    const authToken: string = req.cookies.Authorization;
+    const userAuthenticated: any = jwt.verify(authToken, env.ACCESS_TOKEN_SECRET as string);
+
+    // get comments by question id
+    const comments: Array<CommentDocument> = await Comment.find({
+        question: question._id,
+    })
+        .populate("user", "username")
+        .select("content createdAt");
+
+    // get answers by question id
+    const answers: Array<object> = await getAnswersByQuestionId(question._id);
 
     const questionDTO = {
         title: question.title,
         content: question.content,
         tags: question.tags,
         user: question.user,
+        comments,
+        answers,
         createAt: question.createdAt,
-        likes: question.usersLiked.length,
-        hasCurrentUserLiked:
-            question.usersLiked.filter((user) => userAuthenticatedId?._id === user.toString())
-                .length > 0,
+        likes: question.usersLiked.length - question.usersDisliked.length,
+        hasCurrentUserLiked: question.usersLiked.includes(userAuthenticated._id),
+        hasCurrentUserDisliked: question.usersDisliked.includes(userAuthenticated._id),
     };
+
     return questionDTO;
 }
 
@@ -64,13 +81,13 @@ async function getQuestionsPagination(
         questions = await Question.find()
             .populate("user", "username avatar")
             .sort({ createdAt: -1 })
-            .select("title tags content usersLiked")
+            .select("title tags content usersLiked usersLiked")
             .limit(limit)
             .skip((page - 1) * limit);
     } else if (order === "score") {
         questions = await Question.find()
             .populate("user", "username avatar")
-            .select("title tags content usersLiked");
+            .select("title tags content usersLiked usersLiked");
         questions.sort(
             (questionA, questionB) => questionB.usersLiked.length - questionA.usersLiked.length
         );
@@ -121,11 +138,28 @@ async function toggleLikeQuestion(req: Request): Promise<ObjectId> {
     const question: QuestionDocument | null = await Question.findById(req.params.id);
     if (!question) throw new Error("Couldn't find question");
 
-    // like if disliked, dislike if liked
-    if (question.usersLiked.filter((user) => req.user._id.equals(user)).length > 0) {
+    // like if unliked, unlike if liked
+    if (question.usersLiked.includes(req.user._id)) {
         question.usersLiked = question.usersLiked.filter((user) => !req.user._id.equals(user));
     } else {
         question.usersLiked.push(req.user._id);
+    }
+
+    const questionUpdated: QuestionDocument = await question.save();
+    return questionUpdated._id;
+}
+
+async function toggleDislikeQuestion(req: Request): Promise<ObjectId> {
+    const question: QuestionDocument | null = await Question.findById(req.params.id);
+    if (!question) throw new Error("Couldn't find question");
+
+    // dislike if undisliked, undislike if disliked
+    if (question.usersDisliked.includes(req.user._id)) {
+        question.usersDisliked = question.usersDisliked.filter(
+            (user) => !req.user._id.equals(user)
+        );
+    } else {
+        question.usersDisliked.push(req.user._id);
     }
 
     const questionUpdated: QuestionDocument = await question.save();
@@ -139,4 +173,5 @@ export {
     updateQuestionContent,
     deleteQuestion,
     toggleLikeQuestion,
+    toggleDislikeQuestion,
 };

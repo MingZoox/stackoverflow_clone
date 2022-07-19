@@ -84,6 +84,7 @@
                     display: flex;
                     justify-content: space-between;
                     margin-top: 30px;
+                    margin-bottom: 5px;
 
                     .question--edit {
                         display: flex;
@@ -147,6 +148,9 @@
                 }
 
                 .commment__content {
+                    max-width: 300px;
+                    overflow-y: scroll;
+
                     .comment {
                         padding-top: 3px;
                         padding-bottom: 5px;

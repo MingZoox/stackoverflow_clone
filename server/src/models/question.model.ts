@@ -6,6 +6,7 @@ export interface QuestionDocument extends mongoose.Document {
     content: string;
     tags: string[];
     usersLiked: ObjectId[];
+    usersDisliked: ObjectId[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -20,6 +21,12 @@ const questionSchema = new mongoose.Schema(
         content: { type: String, required: true },
         tags: { type: [String], required: true },
         usersLiked: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "User",
+            },
+        ],
+        usersDisliked: [
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "User",

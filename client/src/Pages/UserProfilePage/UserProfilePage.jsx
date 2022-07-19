@@ -88,7 +88,10 @@ function UserProfilePage() {
                 ) : (
                     <div className="profile__content">
                         <div className="content__reputation">
-                            Reputation <span>{user?.reputation}</span>
+                            Reputation: <span>{user?.reputation}</span>
+                        </div>
+                        <div className="content__reputation">
+                            Email: <span>{user?.email}</span>
                         </div>
                         <div className="content__about">
                             About
