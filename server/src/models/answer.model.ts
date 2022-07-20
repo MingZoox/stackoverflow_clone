@@ -1,8 +1,10 @@
 import mongoose, { ObjectId } from "mongoose";
+import { UserDocument } from "./user.model";
+import { QuestionDocument } from "./question.model";
 
 export interface AnswerDocument extends mongoose.Document {
-    user: ObjectId;
-    question: ObjectId;
+    user: UserDocument;
+    question: QuestionDocument;
     content: string;
     usersLiked: ObjectId[];
     usersDisliked: ObjectId[];

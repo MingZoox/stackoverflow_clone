@@ -2,6 +2,7 @@ import { Request } from "express";
 import { ObjectId } from "mongoose";
 import Comment, { CommentDocument } from "../models/comment.model";
 import Answer, { AnswerDocument } from "../models/answer.model";
+import { Role } from "../models/user.model";
 
 async function addAnswer(req: Request): Promise<ObjectId> {
     if (req.body.content.length > 1500) throw new Error("Answer no more than 1500 letters");
@@ -48,6 +49,39 @@ async function getAnswersByQuestionId(questionId: ObjectId): Promise<Array<objec
     return answersDTO;
 }
 
+async function updateAnswer(req: Request): Promise<ObjectId> {
+    const answer: AnswerDocument | null = await Answer.findById(req.params.id).populate("user");
+    if (!answer) throw new Error("Couldn't find answer");
+
+    if (!(req.user?.role === Role.ADMIN_ROLE)) {
+        if (req.body.content?.length > 1500) {
+            throw new Error("Content must less than 1500 characters");
+        }
+
+        if (!req.user._id.equals(answer.user._id)) {
+            throw new Error("Bad authen");
+        }
+    }
+
+    answer.content = req.body.content;
+    const answerUpdated: AnswerDocument = await answer.save();
+    return answerUpdated._id;
+}
+
+async function deleteAnswer(req: Request): Promise<ObjectId> {
+    const answer: AnswerDocument | null = await Answer.findById(req.params.id).populate("user");
+    if (!answer) throw new Error("Couldn't find answer");
+
+    // admin doesn't need to check user is correct or not
+    if (!(req.user?.role === Role.ADMIN_ROLE) && !req.user._id.equals(answer.user._id)) {
+        throw new Error("Bad authen");
+    }
+
+    const answerDeleted: AnswerDocument | null = await Answer.findByIdAndDelete(req.params.id);
+    if (!answerDeleted) throw new Error("Couldn't find answer");
+    return answer._id;
+}
+
 async function toggleLikeAnswer(req: Request): Promise<ObjectId> {
     const answer: AnswerDocument | null = await Answer.findById(req.params.id);
     if (!answer) throw new Error("Couldn't find Answer");
@@ -78,4 +112,11 @@ async function toggleDislikeAnswer(req: Request): Promise<ObjectId> {
     return answerUpdated._id;
 }
 
-export { addAnswer, getAnswersByQuestionId, toggleLikeAnswer, toggleDislikeAnswer };
+export {
+    addAnswer,
+    getAnswersByQuestionId,
+    updateAnswer,
+    deleteAnswer,
+    toggleLikeAnswer,
+    toggleDislikeAnswer,
+};

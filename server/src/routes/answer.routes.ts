@@ -6,7 +6,10 @@ const answerRouter = express.Router();
 
 answerRouter.post("/answers/:questionId", authen, answerControllers.addAnswer);
 
-answerRouter.put("/questions/like/:id", authen, answerControllers.toggleLikeAnswer);
-answerRouter.put("/questions/dislike/:id", authen, answerControllers.toggleDislikeAnswer);
+answerRouter.put("/answers/like/:id", authen, answerControllers.toggleLikeAnswer);
+answerRouter.put("/answers/dislike/:id", authen, answerControllers.toggleDislikeAnswer);
+answerRouter.put("/answers/:id", authen, answerControllers.updateAnswer);
+
+answerRouter.delete("/answers/:id", authen, answerControllers.deleteAnswer);
 
 export default answerRouter;

@@ -1,7 +1,8 @@
 import mongoose, { ObjectId } from "mongoose";
+import { UserDocument } from "./user.model";
 
 export interface QuestionDocument extends mongoose.Document {
-    user: ObjectId;
+    user: UserDocument;
     title: string;
     content: string;
     tags: string[];

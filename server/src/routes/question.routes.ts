@@ -13,4 +13,6 @@ questionRouter.put("/questions/like/:id", authen, questionControllers.toggleLike
 questionRouter.put("/questions/dislike/:id", authen, questionControllers.toggleDislikeQuestion);
 questionRouter.put("/questions/:id", authen, questionControllers.updateQuestionContent);
 
+questionRouter.delete("/questions/:id", authen, questionControllers.deleteQuestion);
+
 export default questionRouter;

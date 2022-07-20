@@ -1,9 +1,12 @@
-import mongoose, { ObjectId } from "mongoose";
+import mongoose from "mongoose";
+import { UserDocument } from "./user.model";
+import { QuestionDocument } from "./question.model";
+import { AnswerDocument } from "./answer.model";
 
 export interface CommentDocument extends mongoose.Document {
-    user: ObjectId;
-    question: ObjectId;
-    answer: ObjectId;
+    user: UserDocument;
+    question: QuestionDocument;
+    answer: AnswerDocument;
     content: string;
     createdAt: Date;
     updatedAt: Date;

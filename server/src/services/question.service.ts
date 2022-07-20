@@ -108,7 +108,7 @@ async function updateQuestionContent(req: Request): Promise<ObjectId> {
             throw new Error("Content must less than 1500 characters");
         }
 
-        if (!req.user._id.equals(question.user)) {
+        if (!req.user._id.equals(question.user._id)) {
             throw new Error("Bad authen");
         }
     }
@@ -120,17 +120,17 @@ async function updateQuestionContent(req: Request): Promise<ObjectId> {
 
 async function deleteQuestion(req: Request): Promise<ObjectId> {
     const question: QuestionDocument | null = await Question.findById(req.params.id);
-    if (!question) throw new Error("Couldn't delete question");
+    if (!question) throw new Error("Couldn't find question");
 
     // admin doesn't need to check user is correct or not
-    if (!(req.user?.role === Role.ADMIN_ROLE) && !req.user._id.equals(question.user)) {
+    if (!(req.user?.role === Role.ADMIN_ROLE) && !req.user._id.equals(question.user._id)) {
         throw new Error("Bad authen");
     }
 
     const questionDeleted: QuestionDocument | null = await Question.findByIdAndDelete(
         req.params.id
     );
-    if (!questionDeleted) throw new Error("Couldn't find user");
+    if (!questionDeleted) throw new Error("Couldn't find question");
     return question._id;
 }
 
