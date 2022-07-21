@@ -1,10 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
 import AuthContext from "../../Auth/AuthProvider";
 import Sidebar from "../../Layouts/Sidebar/Sidebar";
-import userSchema from "../../Helpers/validation-user";
 import { Link } from "react-router-dom";
 import { useParams } from "react-router-dom";
 import { getUser, updateProfile } from "../../Api/user-api";
+import { getRecentQuestions } from "../../Api/question-api";
 import "./UserProfilePage.scss";
 
 function UserProfilePage() {
@@ -12,11 +12,15 @@ function UserProfilePage() {
     const { auth } = useContext(AuthContext);
     const [user, setUser] = useState({});
     const [avatar, setAvatar] = useState(null);
+    const [recentQuestions, setRecentQuestions] = useState([]);
     const [viewEdit, setViewEdit] = useState(false);
 
     useEffect(() => {
         getUser(idUser).then((res) => {
             setUser(res);
+        });
+        getRecentQuestions(idUser).then((res) => {
+            setRecentQuestions(res);
         });
     }, []);
 
@@ -99,12 +103,14 @@ function UserProfilePage() {
                         </div>
                         <div className="content__recent-question">
                             Recent Questions
-                            <Link to="/questions" className="question">
-                                title1
-                            </Link>
-                            <Link to="/questions" className="question">
-                                title2
-                            </Link>
+                            {recentQuestions.map((question) => (
+                                <Link
+                                    to={`/questions/${question._id}`}
+                                    key={question._id}
+                                    className="question">
+                                    {question.title}
+                                </Link>
+                            ))}
                         </div>
                     </div>
                 )}

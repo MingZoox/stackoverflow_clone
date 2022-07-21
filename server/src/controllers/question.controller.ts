@@ -33,6 +33,16 @@ const getQuestionsPagination = async function (req: Request, res: Response) {
     }
 };
 
+const getRecentQuestion = async function (req: Request, res: Response) {
+    try {
+        const question = await questionServices.getRecentQuestions(req);
+        return res.status(200).json(question);
+    } catch (error: any) {
+        if (error.message) return res.status(400).json({ message: error.message });
+        return res.status(500).json(error);
+    }
+};
+
 const updateQuestionContent = async function (req: Request, res: Response) {
     try {
         const questionUpdatedId = await questionServices.updateQuestionContent(req);
@@ -77,6 +87,7 @@ export {
     addQuestion,
     getQuestion,
     getQuestionsPagination,
+    getRecentQuestion,
     updateQuestionContent,
     deleteQuestion,
     toggleLikeQuestion,

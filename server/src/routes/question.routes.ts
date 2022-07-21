@@ -5,6 +5,7 @@ import authen from "../middlewares/authen.middleware";
 const questionRouter = express.Router();
 
 questionRouter.get("/questions", questionControllers.getQuestionsPagination);
+questionRouter.get("/questions/recent/:userId", questionControllers.getRecentQuestion);
 questionRouter.get("/questions/:id", questionControllers.getQuestion);
 
 questionRouter.post("/questions", authen, questionControllers.addQuestion);

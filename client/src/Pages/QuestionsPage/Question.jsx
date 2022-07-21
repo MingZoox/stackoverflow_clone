@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
 
-function Question({ questionId, votes, title, tags, user }) {
+function Question({ questionId, votes, numAnswers, title, tags, user }) {
     return (
         <div className="question">
-            <div className="question-votes">{votes} votes</div>
+            <div className="question-info">
+                <span>{votes} votes</span> <span>{numAnswers} answers</span>
+            </div>
             <div className="question-content">
                 <Link className="question-content__title" to={`/questions/${questionId}`}>
                     {title}

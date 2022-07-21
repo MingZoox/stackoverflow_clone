@@ -83,6 +83,7 @@ function QuestionsPage() {
                         key={question._id}
                         questionId={question._id}
                         votes={question.usersLiked.length}
+                        numAnswers={question.numAnswers}
                         title={question.title}
                         tags={question.tags}
                         user={question.user}

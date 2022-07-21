@@ -33,6 +33,15 @@ export const getQuestions = async (page, limit, order) => {
     }
 };
 
+export const getRecentQuestions = async (userId) => {
+    try {
+        const { data } = await axios.get(`questions/recent/${userId}`);
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
 export const deleteQuestion = async (questionId) => {
     const payload = new URLSearchParams({
         _id: questionId,

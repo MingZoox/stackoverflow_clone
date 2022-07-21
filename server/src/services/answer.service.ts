@@ -3,6 +3,7 @@ import { ObjectId } from "mongoose";
 import Comment, { CommentDocument } from "../models/comment.model";
 import Answer, { AnswerDocument } from "../models/answer.model";
 import { Role } from "../models/user.model";
+import Question, { QuestionDocument } from "../models/question.model";
 
 async function addAnswer(req: Request): Promise<ObjectId> {
     if (req.body.content.length > 1500) throw new Error("Answer no more than 1500 letters");
@@ -17,6 +18,12 @@ async function addAnswer(req: Request): Promise<ObjectId> {
 
     const createdAnswer: AnswerDocument = await answer.save();
     if (!createdAnswer) throw new Error("Query to database got error");
+
+    const question: QuestionDocument | null = await Question.findById(req.params.questionId);
+    if (!question) throw new Error("Query to database got error");
+
+    question.numAnswers += 1;
+    await question.save();
 
     return createdAnswer._id;
 }

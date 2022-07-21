@@ -71,8 +71,8 @@ async function getQuestionsPagination(
 
     const totalQuestions: number = await Question.countDocuments();
     if (!totalQuestions) throw new Error("Query to database got error");
-    const totalPages = Math.ceil(totalQuestions / limit);
 
+    const totalPages = Math.ceil(totalQuestions / limit);
     if (page <= 0 || page > totalPages || limit <= 0) throw new Error("Parameters aren't accepted");
 
     let questions: Array<QuestionDocument> | null = null;
@@ -81,22 +81,40 @@ async function getQuestionsPagination(
         questions = await Question.find()
             .populate("user", "username avatar")
             .sort({ createdAt: -1 })
-            .select("title tags content usersLiked usersLiked")
+            .select("title tags content usersLiked usersLiked numAnswers")
             .limit(limit)
             .skip((page - 1) * limit);
     } else if (order === "score") {
         questions = await Question.find()
             .populate("user", "username avatar")
-            .select("title tags content usersLiked usersLiked");
+            .select("title tags content usersLiked usersLiked numAnswers");
         questions.sort(
             (questionA, questionB) => questionB.usersLiked.length - questionA.usersLiked.length
         );
+        questions = questions.slice((page - 1) * limit, (page - 1) * limit + limit);
+    } else if (order === "unanswered") {
+        questions = await Question.find()
+            .populate("user", "username avatar")
+            .select("title tags content usersLiked usersLiked numAnswers");
+        questions.sort((questionA, questionB) => questionA.numAnswers - questionB.numAnswers);
         questions = questions.slice((page - 1) * limit, (page - 1) * limit + limit);
     }
 
     if (!questions) throw new Error("Query to database got error");
 
     return { questions, totalPages, totalQuestions };
+}
+
+async function getRecentQuestions(req: Request) {
+    const questions: Array<QuestionDocument> | null = await Question.find({
+        user: req.params.userId,
+    }).select("title");
+
+    if (!questions) throw new Error("Query to database got error");
+
+    const recentQuestions = questions.reverse();
+
+    return recentQuestions;
 }
 
 async function updateQuestionContent(req: Request): Promise<ObjectId> {
@@ -174,4 +192,5 @@ export {
     deleteQuestion,
     toggleLikeQuestion,
     toggleDislikeQuestion,
+    getRecentQuestions,
 };

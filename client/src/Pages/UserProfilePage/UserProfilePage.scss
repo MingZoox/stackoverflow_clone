@@ -71,12 +71,14 @@
                 a {
                     display: block;
                     text-decoration: none;
-                    color: #525960;
+                    color: #0074cc;
                     margin-top: 20px;
+                    font-size: 15px;
                     border-bottom: 1px solid gray;
 
                     &:hover {
                         cursor: pointer;
+                        color: #0a95ff;
                     }
                 }
             }
@@ -110,7 +112,7 @@
                 border-radius: 3px;
                 border: 1px solid rgb(185, 185, 185);
                 outline: none;
-    
+
                 &:focus {
                     box-shadow: 0 0 8px rgb(75, 177, 255);
                 }

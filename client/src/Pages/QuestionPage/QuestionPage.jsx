@@ -13,6 +13,7 @@ function QuestionPage() {
     const [question, setQuestion] = useState('`console.log("Hello")` \n xin chao');
     const [isEditCommentEnable, setIsEditComentEnable] = useState(false);
     const [commentEditing, setCommentEditing] = useState("");
+    const [postAnswer, setPostAnswer] = useState("");
 
     useEffect(() => {}, []);
 
@@ -24,6 +25,12 @@ function QuestionPage() {
 
     function handleDeleteComment() {
         if (window.confirm("Are you sure you want to delete comment ?")) {
+            navigate("/questions");
+        }
+    }
+
+    function handlePostAnswer() {
+        if (window.confirm("Are you sure you want to post your answer ?")) {
             navigate("/questions");
         }
     }
@@ -131,6 +138,14 @@ function QuestionPage() {
                     <Answer />
                     <Answer />
                     <Answer />
+                </div>
+
+                <div className="answer__post" data-color-mode="light">
+                    Your Answer
+                    <MDEditor value={postAnswer} onChange={setPostAnswer} height="300" />
+                    <span className="post-answer-btn" onClick={handlePostAnswer}>
+                        Post Your Answer
+                    </span>
                 </div>
             </div>
         </div>

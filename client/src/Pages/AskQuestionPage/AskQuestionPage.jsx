@@ -57,7 +57,7 @@ function AskQuestionPage() {
                 </div>
             </div>
             <div className="ask__submmit" onClick={submmitQuestion}>
-                Public your question
+                Post your question
             </div>
         </div>
     );
