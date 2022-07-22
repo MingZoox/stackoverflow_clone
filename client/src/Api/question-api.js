@@ -2,8 +2,8 @@ import axios from "axios";
 
 export const addQuestion = async (title, content, tags) => {
     const payload = new URLSearchParams({
-        title: title,
-        content: content,
+        title,
+        content,
         tags: tags.split(" "),
     });
 
@@ -55,7 +55,7 @@ export const deleteQuestion = async (questionId) => {
     }
 };
 
-export const voteQuestion = async (questionId) => {
+export const likeQuestion = async (questionId) => {
     try {
         const { data } = await axios.put(`questions/like/${questionId}`);
         return data;
@@ -64,11 +64,22 @@ export const voteQuestion = async (questionId) => {
     }
 };
 
-export const updateQuestion = async (question) => {
-    const payload = new URLSearchParams(question);
+export const disLikeQuestion = async (questionId) => {
+    try {
+        const { data } = await axios.put(`questions/dislike/${questionId}`);
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
+export const updateQuestion = async (questionId, content) => {
+    const payload = new URLSearchParams({
+        content,
+    });
 
     try {
-        const { data } = await axios.put(`questions?_id=${question._id}`, payload);
+        const { data } = await axios.put(`questions/${questionId}`, payload);
         return data;
     } catch (error) {
         error.response.data?.message && alert(error.response.data?.message);

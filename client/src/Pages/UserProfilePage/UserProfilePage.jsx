@@ -8,7 +8,7 @@ import { getRecentQuestions } from "../../Api/question-api";
 import "./UserProfilePage.scss";
 
 function UserProfilePage() {
-    const { idUser } = useParams();
+    const { userId } = useParams();
     const { auth } = useContext(AuthContext);
     const [user, setUser] = useState({});
     const [avatar, setAvatar] = useState(null);
@@ -16,10 +16,10 @@ function UserProfilePage() {
     const [viewEdit, setViewEdit] = useState(false);
 
     useEffect(() => {
-        getUser(idUser).then((res) => {
+        getUser(userId).then((res) => {
             setUser(res);
         });
-        getRecentQuestions(idUser).then((res) => {
+        getRecentQuestions(userId).then((res) => {
             setRecentQuestions(res);
         });
     }, []);
@@ -47,7 +47,7 @@ function UserProfilePage() {
                 <div className="profile__header">
                     <img src={user?.avatar}></img>
                     <h1>{user?.username}</h1>
-                    {idUser === auth?._id && (
+                    {userId === auth?._id && (
                         <div
                             className="edit-profile-btn"
                             onClick={() => {

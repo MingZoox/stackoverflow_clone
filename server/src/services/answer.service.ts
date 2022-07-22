@@ -1,6 +1,8 @@
 import { Request } from "express";
 import { ObjectId } from "mongoose";
+import jwt from "jsonwebtoken";
 import Comment, { CommentDocument } from "../models/comment.model";
+import env from "../configs/env.config";
 import Answer, { AnswerDocument } from "../models/answer.model";
 import { Role } from "../models/user.model";
 import Question, { QuestionDocument } from "../models/question.model";
@@ -28,10 +30,14 @@ async function addAnswer(req: Request): Promise<ObjectId> {
     return createdAnswer._id;
 }
 
-async function getAnswersByQuestionId(questionId: ObjectId): Promise<Array<object>> {
+async function getAnswersByQuestionId(req: Request, questionId: ObjectId): Promise<Array<object>> {
     const answers: Array<AnswerDocument> | null = await Answer.find({
         question: questionId,
-    }).populate("user", "username avatar");
+    }).populate("user", "username avatar reputation");
+
+    // get user id to check has current user liked or not
+    const authToken: string = req.cookies.Authorization;
+    const userAuthenticated: any = jwt.verify(authToken, env.ACCESS_TOKEN_SECRET as string);
 
     const answersDTO: Array<object> = await Promise.all(
         answers.map(async (answer): Promise<object> => {
@@ -49,6 +55,8 @@ async function getAnswersByQuestionId(questionId: ObjectId): Promise<Array<objec
                 comments,
                 likes: answer.usersLiked.length - answer.usersDisliked.length,
                 createdAt: answer.createdAt,
+                hasCurrentUserLiked: answer.usersLiked.includes(userAuthenticated._id),
+                hasCurrentUserDisliked: answer.usersDisliked.includes(userAuthenticated._id),
             };
         })
     );

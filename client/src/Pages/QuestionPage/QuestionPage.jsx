@@ -1,116 +1,229 @@
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import MDEditor from "@uiw/react-md-editor";
 import Sidebar from "../../Layouts/Sidebar/Sidebar";
 import Answer from "./Answer";
 import "./QuestionPage.scss";
-import MDEditor from "@uiw/react-md-editor";
-import { useState, useEffect } from "react";
+import AuthContext from "../../Auth/AuthProvider";
+import {
+    getQuestion,
+    likeQuestion,
+    disLikeQuestion,
+    updateQuestion,
+    deleteQuestion,
+} from "../../Api/question-api";
+import { addAnswer } from "../../Api/answer-api";
+import { addComment, updateComment, deleteComment } from "../../Api/comment-api";
 
 function QuestionPage() {
-    const { idQuestion } = useParams();
+    const { questionId } = useParams();
     let navigate = useNavigate();
 
-    const [answers, setAnswers] = useState([]);
-    const [question, setQuestion] = useState('`console.log("Hello")` \n xin chao');
+    const { auth } = useContext(AuthContext);
+    const [question, setQuestion] = useState({});
     const [isEditCommentEnable, setIsEditComentEnable] = useState(false);
+    const [isEditQuestionEnable, setIsEditQuestionEnable] = useState(false);
     const [commentEditing, setCommentEditing] = useState("");
+    const [commentIdEditing, setCommentIdEditing] = useState(null);
+    const [questionEditing, setQuestionEditing] = useState("");
     const [postAnswer, setPostAnswer] = useState("");
 
-    useEffect(() => {}, []);
-
-    function handleDeleteQuestion() {
-        if (window.confirm("Are you sure you want to delete question ?")) {
-            navigate("/questions");
-        }
-    }
-
-    function handleDeleteComment() {
-        if (window.confirm("Are you sure you want to delete comment ?")) {
-            navigate("/questions");
-        }
-    }
+    useEffect(() => {
+        getQuestion(questionId).then((res) => {
+            setQuestion(res);
+        });
+    }, []);
 
     function handlePostAnswer() {
         if (window.confirm("Are you sure you want to post your answer ?")) {
+            addAnswer(questionId, postAnswer).then((res) => {
+                if (res) {
+                    alert("Post answer success !!");
+                }
+                navigate(0);
+            });
+        }
+    }
+
+    function handleDeleteQuestion() {
+        if (window.confirm("Are you sure you want to delete your question ?")) {
+            deleteQuestion(questionId).then((res) => {
+                if (res) {
+                    alert("Question deleted !!");
+                    navigate(0);
+                }
+            });
             navigate("/questions");
         }
     }
 
-    function handleEnableEditComment(value) {
-        setIsEditComentEnable(true);
+    function handleEditQuestion() {
+        if (window.confirm("Are you sure you want to edit your question ?")) {
+            updateQuestion(questionId, questionEditing).then((res) => {
+                if (res) {
+                    alert("Edit question success !!");
+                    navigate(0);
+                }
+            });
+        }
+    }
+
+    function handleDeleteComment(commentId) {
+        if (window.confirm("Are you sure you want to delete your comment ?")) {
+            deleteComment(commentId).then((res) => {
+                if (res) {
+                    alert("Comment deleted !!");
+                    navigate(0);
+                }
+            });
+        }
+    }
+
+    function handleSumbitComment() {
+        if (window.confirm("Are you sure you want to post your comment ?")) {
+            if (!commentIdEditing) {
+                addComment(questionId, "question", commentEditing).then((res) => {
+                    if (res) {
+                        alert("Post comment success !!");
+                        navigate(0);
+                    }
+                });
+            } else {
+                updateComment(commentIdEditing, commentEditing).then((res) => {
+                    if (res) {
+                        alert("Edit comment success !!");
+                        navigate(0);
+                    }
+                });
+            }
+        }
+    }
+
+    function handleEnableEditComment(value, id) {
+        setCommentIdEditing(id);
+        setIsEditComentEnable(!isEditCommentEnable);
         setCommentEditing(value);
     }
 
-    function handleSumbitComment() {}
+    function handleEnableEditQuestion(value) {
+        setIsEditQuestionEnable(!isEditQuestionEnable);
+        setQuestionEditing(value);
+    }
 
     return (
         <div className="question-page">
             <Sidebar />
             <div className="question-page__content">
                 <div className="question-page__header">
-                    <div className="question-page__title">
-                        Why is processing a sorted array faster than processing an unsorted array?
-                    </div>
+                    <div className="question-page__title">{question.title}</div>
                     <div className="ask-question-btn">
                         <Link to="/questions/ask">Ask Question</Link>
                     </div>
-                    <div className="question-page__created-at">Asked 123</div>
+                    <div className="question-page__created-at">
+                        Asked {question.createdAt?.slice(0, 10)}
+                    </div>
                 </div>
 
                 <div className="question-page__main-content" data-color-mode="light">
                     <div className="question-vote">
-                        <svg fill="#525960" width="36" height="36">
+                        <svg
+                            fill={question.hasCurrentUserLiked ? "orange" : "#525960"}
+                            width="36"
+                            height="36"
+                            onClick={() => {
+                                likeQuestion(questionId).then((res) => res && navigate(0));
+                            }}>
                             <path d="M2 25h32L18 9 2 25Z" />
                         </svg>
-                        123
-                        <svg fill="#525960" width="36" height="36">
+                        {question.likes}
+                        <svg
+                            fill={question.hasCurrentUserDisliked ? "orange" : "#525960"}
+                            width="36"
+                            height="36"
+                            onClick={() => {
+                                disLikeQuestion(questionId).then((res) => res && navigate(0));
+                            }}>
                             <path d="M2 11h32L18 27 2 11Z" />
                         </svg>
                     </div>
                     <div className="question-page__question">
-                        <MDEditor.Markdown source={question} />
+                        <MDEditor.Markdown source={question.content} />
                         <div className="question-page__question-footer">
-                            <div className="question--edit">
-                                <Link to={`/questions/123/edit`}>Edit</Link>
-                                <div className="question--delete" onClick={handleDeleteQuestion}>
-                                    Delete
+                            {question.user?._id === auth?._id && (
+                                <div className="question--edit">
+                                    <span
+                                        onClick={() => handleEnableEditQuestion(question.content)}>
+                                        Edit
+                                    </span>
+                                    <div
+                                        className="question--delete"
+                                        onClick={handleDeleteQuestion}>
+                                        Delete
+                                    </div>
                                 </div>
-                            </div>
+                            )}
+
                             <div className="question__user">
-                                <div className="question__user__asked">Asked 123</div>
+                                <div className="question__user__asked">
+                                    Asked {question.createdAt?.slice(0, 10)}
+                                </div>
                                 <div className="question__user__avatar">
-                                    <img
-                                        src="https://i.stack.imgur.com/FkjBe.png?s=64&g=1"
-                                        alt=""
-                                    />
+                                    <img src={question.user?.avatar} alt="" />
                                 </div>
                                 <div className="question__user__username">
-                                    <Link to={`/users/123`}>vune</Link>
+                                    <Link to={`/users/${question.user?._id}`}>
+                                        {question.user?.username}
+                                    </Link>
                                 </div>
-                                <div className="question__user__reputation">123</div>
+                                <div className="question__user__reputation">
+                                    {question.user?.reputation}
+                                </div>
                             </div>
                         </div>
 
-                        <div className="commment__content">
-                            <div className="comment">
-                                <div className="comment__content">
-                                    For the record, your data need not be sorted, only partitioned .
-                                    - <Link to={`/users/123`}>Username</Link>
-                                </div>
-                                <div className="comment--edit">
-                                    <span
-                                        onClick={() => {
-                                            handleEnableEditComment("For the record");
-                                        }}>
-                                        Edit
-                                    </span>
-                                    <span onClick={handleDeleteComment}>Delete</span>
-                                </div>
+                        {isEditQuestionEnable && (
+                            <div className="answer__post" data-color-mode="light">
+                                Edit
+                                <MDEditor value={questionEditing} onChange={setQuestionEditing} />
+                                <span className="post-answer-btn" onClick={handleEditQuestion}>
+                                    Submit Edit
+                                </span>
                             </div>
+                        )}
+
+                        <div className="comments__content">
+                            {question.comments?.map((comment) => (
+                                <div className="comment" key={comment._id}>
+                                    <div className="comment__content">
+                                        {comment.content} -{" "}
+                                        <Link to={`/users/${comment.user._id}`}>
+                                            {comment.user.username}
+                                        </Link>
+                                    </div>
+
+                                    {comment.user._id === auth?._id && (
+                                        <div className="comment--edit">
+                                            <span
+                                                onClick={() =>
+                                                    handleEnableEditComment(
+                                                        comment.content,
+                                                        comment._id
+                                                    )
+                                                }>
+                                                Edit
+                                            </span>
+                                            <span onClick={() => handleDeleteComment(comment._id)}>
+                                                Delete
+                                            </span>
+                                        </div>
+                                    )}
+                                </div>
+                            ))}
 
                             <div
                                 className="comment--add"
                                 onClick={() => {
-                                    handleEnableEditComment("");
+                                    handleEnableEditComment("", undefined);
                                 }}>
                                 Add a comment
                             </div>
@@ -134,10 +247,22 @@ function QuestionPage() {
                 </div>
 
                 <div className="answers">
-                    <div className="total-answers">27 Answers</div>
-                    <Answer />
-                    <Answer />
-                    <Answer />
+                    <div className="total-answers">{question.answers?.length} Answers</div>
+
+                    {question.answers?.map((answer) => (
+                        <Answer
+                            key={answer._id}
+                            answerId={answer._id}
+                            auth={auth}
+                            comments={answer.comments}
+                            content={answer.content}
+                            createdAt={answer.createdAt}
+                            hasCurrentUserLiked={answer.hasCurrentUserLiked}
+                            hasCurrentUserDisliked={answer.hasCurrentUserDisliked}
+                            likes={answer.likes}
+                            user={answer.user}
+                        />
+                    ))}
                 </div>
 
                 <div className="answer__post" data-color-mode="light">

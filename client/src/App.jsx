@@ -41,11 +41,11 @@ function App() {
                     <Route index element={<UsersPage />} />
                     <Route path="login" element={<LoginPage />} />
                     <Route path="signup" element={<SignupPage />} />
-                    <Route path=":idUser" element={<UserProfilePage />} />
+                    <Route path=":userId" element={<UserProfilePage />} />
                 </Route>
                 <Route path="questions">
                     <Route index element={<QuestionsPage />} />
-                    <Route path=":idQuestion" element={<QuestionPage />} />
+                    <Route path=":questionId" element={<QuestionPage />} />
                     <Route path="ask" element={<AskQuestionPage />} />
                 </Route>
                 <Route path="tags">

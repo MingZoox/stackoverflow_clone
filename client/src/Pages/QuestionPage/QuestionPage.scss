@@ -76,22 +76,21 @@
                 border-bottom: 1px solid hsl(210, 8%, 90%);
                 padding-bottom: 30px;
 
-                .wmde-markdown {
-                    width: 750px;
-                }
-
                 .question-page__question-footer {
                     display: flex;
-                    justify-content: space-between;
                     margin-top: 30px;
                     margin-bottom: 5px;
+                    width: 750px;
 
                     .question--edit {
                         display: flex;
 
-                        a {
-                            text-decoration: none;
+                        span {
                             margin-right: 10px;
+
+                            &:hover {
+                                cursor: pointer;
+                            }
                         }
 
                         .question--delete {
@@ -102,6 +101,7 @@
                     }
 
                     .question__user {
+                        margin-left: auto;
                         width: 200px;
                         height: 70px;
                         padding: 10px;
@@ -147,7 +147,7 @@
                     }
                 }
 
-                .commment__content {
+                .comments__content {
                     max-height: 300px;
                     overflow-y: scroll;
 
@@ -241,11 +241,15 @@
             font-size: 24px;
             color: #232629;
             margin-bottom: 30px;
-            
+
             .w-md-editor {
                 width: 800px;
                 margin-top: 20px;
                 margin-bottom: 20px;
+            }
+
+            .wmde-markdown {
+                width: 400px;
             }
 
             .post-answer-btn {

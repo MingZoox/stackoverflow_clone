@@ -28,7 +28,7 @@ async function addQuestion(req: Request): Promise<ObjectId> {
 async function getQuestion(req: Request): Promise<object> {
     const question: QuestionDocument | null = await Question.findById(req.params.id).populate(
         "user",
-        "username avatar"
+        "username avatar reputation"
     );
     if (!question) throw new Error("Couldn't find question");
 
@@ -41,10 +41,10 @@ async function getQuestion(req: Request): Promise<object> {
         question: question._id,
     })
         .populate("user", "username")
-        .select("content createdAt");
+        .select("content");
 
     // get answers by question id
-    const answers: Array<object> = await getAnswersByQuestionId(question._id);
+    const answers: Array<object> = await getAnswersByQuestionId(req, question._id);
 
     const questionDTO = {
         title: question.title,
@@ -53,7 +53,7 @@ async function getQuestion(req: Request): Promise<object> {
         user: question.user,
         comments,
         answers,
-        createAt: question.createdAt,
+        createdAt: question.createdAt,
         likes: question.usersLiked.length - question.usersDisliked.length,
         hasCurrentUserLiked: question.usersLiked.includes(userAuthenticated._id),
         hasCurrentUserDisliked: question.usersDisliked.includes(userAuthenticated._id),
