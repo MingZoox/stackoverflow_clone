@@ -1,6 +1,9 @@
 import { useState, useContext } from "react";
+import { GoogleLogin } from "@react-oauth/google";
+import Cookies from "js-cookie";
+import jwt_decode from "jwt-decode";
 import { handleLogin } from "../../Helpers/handle-login";
-import { sendForgotPasswordMail } from "../../Api/user-api";
+import { loginOAuth, sendForgotPasswordMail, getCurrentUser } from "../../Api/user-api";
 import { useNavigate, useLocation } from "react-router-dom";
 import AuthContext from "../../Auth/AuthProvider";
 import "./LoginPage.scss";
@@ -38,11 +41,7 @@ function LoginPage() {
 
     function handleSubmitForgotPassword(e) {
         e.preventDefault();
-        sendForgotPasswordMail(forgotMail).then((res) => {
-            if (res) {
-                alert("Mail sent successfully !!");
-            }
-        });
+        sendForgotPasswordMail(forgotMail).then((res) => res && alert("Mail sent successfully !!"));
     }
 
     return (
@@ -55,6 +54,24 @@ function LoginPage() {
                         fill="#F48024"
                     />
                 </svg>
+                <GoogleLogin
+                    onSuccess={({ credential }) => {
+                        const user = jwt_decode(credential);
+                        loginOAuth(user.email, user.given_name, user.picture).then((res) => {
+                            if (res) {
+                                Cookies.set("Authorization", res.token);
+                                getCurrentUser().then((currentUser) => {
+                                    setAuth(currentUser);
+                                });
+                                navigate("/");
+                            }
+                        });
+                    }}
+                    onError={() => {
+                        alert("Login Failed");
+                    }}
+                    useOneTap
+                />
             </div>
             <div className="loginpage__form">
                 {isForgotFormActived ? (

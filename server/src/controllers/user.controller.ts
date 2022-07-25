@@ -22,6 +22,16 @@ const userLogin = async function (req: Request, res: Response) {
     }
 };
 
+const userLoginOAuth = async function (req: Request, res: Response) {
+    try {
+        const token = await userServices.loginUserOAuth(req);
+        return res.status(200).json({ token });
+    } catch (error: any) {
+        if (error.message) return res.status(400).json({ message: error.message });
+        return res.status(500).json(error);
+    }
+};
+
 const getUser = async function (req: Request, res: Response) {
     try {
         const user = await userServices.getUser(req);
@@ -100,6 +110,7 @@ const verifyMailForgetPassword = function (req: Request, res: Response) {
 export {
     addUser,
     userLogin,
+    userLoginOAuth,
     getCurrentUser,
     getUser,
     getUsersPagination,

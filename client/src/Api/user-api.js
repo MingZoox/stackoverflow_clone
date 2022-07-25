@@ -14,6 +14,21 @@ export const login = async (email, password) => {
     }
 };
 
+export const loginOAuth = async (email, username, avatar) => {
+    const payload = new URLSearchParams({
+        email,
+        username,
+        avatar,
+    });
+
+    try {
+        const { data } = await axios.post("users/login/oauth", payload);
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
 export const signup = async (displayname, email, password) => {
     const payload = new URLSearchParams({
         username: displayname,

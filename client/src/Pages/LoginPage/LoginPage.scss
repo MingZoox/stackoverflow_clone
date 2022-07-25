@@ -5,7 +5,13 @@
     width: 100%;
 
     .loginpage__logo {
-        margin-left: 49%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+
+        >div {
+            margin: 20px 0;
+        }
     }
 
     .loginpage__form {
@@ -14,7 +20,7 @@
         color: black;
         background-color: white;
         padding: 25px;
-        margin: 50px auto;
+        margin: 0 auto 50px auto;
         border-radius: 10px;
         box-shadow: 0 0 10px rgb(192, 192, 192);
 

@@ -24,8 +24,22 @@ async function loginUser(req: Request): Promise<string> {
     const user: UserDocument | null = await User.findOne({ email: req.body.email });
     if (!user) throw new Error("email is invalid");
 
+    if (!user.password) throw new Error("password is invalid");
     const isLoginValid = await user.comparePassword(req.body.password);
     if (!isLoginValid) throw new Error("password is invalid");
+
+    const token = user.generateJwt();
+    return token;
+}
+
+async function loginUserOAuth(req: Request): Promise<string> {
+    const user: UserDocument | null = await User.findOne({ email: req.body.email });
+    if (!user) {
+        const userCreated: UserDocument = new User(req.body);
+        await userCreated.save();
+        const token = userCreated.generateJwt();
+        return token;
+    }
 
     const token = user.generateJwt();
     return token;
@@ -157,6 +171,7 @@ function verifyMailForgetPassword(req: Request): void {
 
 export {
     loginUser,
+    loginUserOAuth,
     addUser,
     getUser,
     getUsersPagination,

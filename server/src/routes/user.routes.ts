@@ -11,6 +11,7 @@ userRouter.get("/users", userControllers.getUsersPagination);
 userRouter.get("/users/:id", userControllers.getUser);
 
 userRouter.post("/users/login", userControllers.userLogin);
+userRouter.post("/users/login/oauth", userControllers.userLoginOAuth);
 userRouter.post("/users/forget", userControllers.sendMailForgetPassword);
 userRouter.post("/users/register", userControllers.addUser);
 
