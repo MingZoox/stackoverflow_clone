@@ -82,21 +82,21 @@ async function getQuestionsPagination(
         questions = await Question.find()
             .populate("user", "username avatar")
             .sort({ createdAt: -1 })
-            .select("title tags content usersLiked usersLiked numAnswers")
+            .select("title tags content usersLiked usersDisliked numAnswers")
             .limit(limit)
             .skip((page - 1) * limit);
     } else if (order === "score") {
         questions = await Question.find()
             .populate("user", "username avatar")
-            .select("title tags content usersLiked usersLiked numAnswers");
+            .select("title tags content usersLiked usersDisLiked numAnswers");
         questions.sort(
-            (questionA, questionB) => questionB.usersLiked.length - questionA.usersLiked.length
+            (questionA, questionB) => questionB.usersLiked.length - questionA.usersDisliked.length
         );
         questions = questions.slice((page - 1) * limit, (page - 1) * limit + limit);
     } else if (order === "unanswered") {
         questions = await Question.find()
             .populate("user", "username avatar")
-            .select("title tags content usersLiked usersLiked numAnswers");
+            .select("title tags content usersLiked usersDisLiked numAnswers");
         questions.sort((questionA, questionB) => questionA.numAnswers - questionB.numAnswers);
         questions = questions.slice((page - 1) * limit, (page - 1) * limit + limit);
     }
@@ -118,7 +118,7 @@ async function getRecentQuestions(req: Request) {
     return recentQuestions;
 }
 
-async function updateQuestionContent(req: Request): Promise<ObjectId> {
+async function updateQuestion(req: Request): Promise<ObjectId> {
     const question: QuestionDocument | null = await Question.findById(req.params.id);
     if (!question) throw new Error("Couldn't find question");
 
@@ -130,10 +130,18 @@ async function updateQuestionContent(req: Request): Promise<ObjectId> {
         if (!req.user._id.equals(question.user._id)) {
             throw new Error("Bad authen");
         }
+        question.content = req.body.content;
+
+        const questionUpdated: QuestionDocument = await question.save();
+        return questionUpdated._id;
     }
 
-    question.content = req.body.content;
-    const questionUpdated: QuestionDocument = await question.save();
+    const questionUpdated: QuestionDocument | null = await Question.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body },
+        { new: true }
+    );
+    if (!questionUpdated) throw new Error("Couldn't update question");
     return questionUpdated._id;
 }
 
@@ -204,7 +212,7 @@ export {
     addQuestion,
     getQuestion,
     getQuestionsPagination,
-    updateQuestionContent,
+    updateQuestion,
     deleteQuestion,
     toggleLikeQuestion,
     toggleDislikeQuestion,

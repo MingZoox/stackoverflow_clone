@@ -93,10 +93,20 @@ async function updateAnswer(req: Request): Promise<ObjectId> {
         if (!req.user._id.equals(answer.user._id)) {
             throw new Error("Bad authen");
         }
+
+        answer.content = req.body.content;
+        const answerUpdated: AnswerDocument = await answer.save();
+
+        return answerUpdated._id;
     }
 
-    answer.content = req.body.content;
-    const answerUpdated: AnswerDocument = await answer.save();
+    const answerUpdated: AnswerDocument | null = await Answer.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body },
+        { new: true }
+    );
+    if (!answerUpdated) throw new Error("Couldn't update answer");
+
     return answerUpdated._id;
 }
 

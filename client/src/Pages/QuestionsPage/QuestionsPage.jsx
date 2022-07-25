@@ -82,7 +82,7 @@ function QuestionsPage() {
                     <Question
                         key={question._id}
                         questionId={question._id}
-                        votes={question.usersLiked.length}
+                        votes={question.usersLiked.length - question.usersDisliked.length}
                         numAnswers={question.numAnswers}
                         title={question.title}
                         tags={question.tags}

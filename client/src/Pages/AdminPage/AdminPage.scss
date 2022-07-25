@@ -52,6 +52,7 @@
 
             button {
                 margin-left: 700px;
+                height: 50px;
                 background-color: rgb(255, 197, 89);
                 color: white;
                 outline: none;
@@ -91,6 +92,10 @@
                     border-radius: 20px;
                     border-color: orange;
                     font-weight: bold;
+                     
+                    &:hover {
+                        cursor: pointer;
+                    }
                 }
             }
         }

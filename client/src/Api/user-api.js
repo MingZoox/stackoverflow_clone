@@ -52,6 +52,7 @@ export const getUsers = async (page, limit, filter) => {
 };
 
 export const addUser = async (userInfo) => {
+    console.log(userInfo);
     const payload = new URLSearchParams(userInfo);
 
     try {

@@ -1,11 +1,14 @@
 import { useState, useEffect } from "react";
 import AdminPageContent from "./AdminPageContent";
 import { getUsers } from "../../Api/user-api";
+import { getQuestions } from "../../Api/question-api";
 import "./AdminPage.scss";
 
 export const Pages = {
     USER: "User",
     POST: "Post",
+    ANSWER: "Answer",
+    COMMENT: "Comment",
 };
 
 function AdminPage() {
@@ -13,10 +16,13 @@ function AdminPage() {
     const [pageName, setPageName] = useState(Pages.USER);
     const [totalPages, setTotalPages] = useState(1);
 
-    const LimitRecordInPage = 5;
+    const LimitRecordInPage = 10;
 
     useEffect(() => {
         getUsers(1, LimitRecordInPage).then((res) => {
+            res.users.forEach((user) => {
+                delete user["_id"];
+            });
             setData(res.users);
             setTotalPages(res.totalPages);
         });
@@ -24,16 +30,21 @@ function AdminPage() {
 
     function handleSideUser() {
         getUsers(1, LimitRecordInPage).then((res) => {
-            setData(res);
+            setData(res.users);
             setPageName(Pages.USER);
         });
     }
 
     function handleSidePost() {
-        // getAllPosts().then((res) => {
-        //     setData(res);
-        //     setPageName(Pages.POST);
-        // });
+        getQuestions(1, LimitRecordInPage, "newest").then((res) => {
+            res.questions.forEach((question) => {
+                delete question["usersLiked"];
+                delete question["usersDisliked"];
+                delete question["user"];
+            });
+            setData(res.questions);
+            setPageName(Pages.POST);
+        });
     }
 
     return (
@@ -50,6 +61,11 @@ function AdminPage() {
                         onClick={handleSidePost}
                         className={pageName === Pages.POST ? "target-active" : ""}>
                         {Pages.POST}
+                    </span>
+                    <span
+                        onClick={handleSidePost}
+                        className={pageName === Pages.ANSWER ? "target-active" : ""}>
+                        {Pages.ANSWER}
                     </span>
                 </div>
             </div>

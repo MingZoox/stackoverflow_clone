@@ -45,7 +45,7 @@ const getRecentQuestion = async function (req: Request, res: Response) {
 
 const updateQuestionContent = async function (req: Request, res: Response) {
     try {
-        const questionUpdatedId = await questionServices.updateQuestionContent(req);
+        const questionUpdatedId = await questionServices.updateQuestion(req);
         return res.status(200).json(questionUpdatedId);
     } catch (error: any) {
         if (error.message) return res.status(400).json({ message: error.message });

@@ -48,7 +48,7 @@ export const deleteQuestion = async (questionId) => {
     });
 
     try {
-        const { data } = await axios.delete("questions", payload);
+        const { data } = await axios.delete(`questions/${questionId}`, payload);
         return data;
     } catch (error) {
         error.response.data?.message && alert(error.response.data?.message);
@@ -67,6 +67,17 @@ export const likeQuestion = async (questionId) => {
 export const disLikeQuestion = async (questionId) => {
     try {
         const { data } = await axios.put(`questions/dislike/${questionId}`);
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
+export const updateQuestionAdmin = async (content) => {
+    const payload = new URLSearchParams(content);
+
+    try {
+        const { data } = await axios.put(`questions/${content._id}`, payload);
         return data;
     } catch (error) {
         error.response.data?.message && alert(error.response.data?.message);

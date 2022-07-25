@@ -82,10 +82,18 @@ async function updateComment(req: Request): Promise<ObjectId> {
         if (!req.user._id.equals(comment.user._id)) {
             throw new Error("Bad authen");
         }
+        comment.content = req.body.content;
+        const commentUpdated: CommentDocument = await comment.save();
+        return commentUpdated._id;
     }
 
-    comment.content = req.body.content;
-    const commentUpdated: CommentDocument = await comment.save();
+    const commentUpdated: CommentDocument | null = await Comment.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body },
+        { new: true }
+    );
+    if (!commentUpdated) throw new Error("Couldn't update comment");
+
     return commentUpdated._id;
 }
 

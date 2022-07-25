@@ -56,12 +56,12 @@ async function getUsersPagination(
     let users: Array<UserDocument> | null = null;
     if (req.user?.role !== "admin") {
         users = await User.find()
-            .select("username reputation avatar")
+            .select("username email password reputation avatar about role")
             .limit(limit)
             .skip((page - 1) * limit);
     } else {
         users = await User.find()
-            .select("username email password reputation avatar about role")
+            .select("username reputation avatar")
             .limit(limit)
             .skip((page - 1) * limit);
     }
