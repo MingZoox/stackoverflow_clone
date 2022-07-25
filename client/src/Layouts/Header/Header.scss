@@ -147,7 +147,7 @@ body {
             background-color: rgb(211, 211, 211);
         }
 
-        .notification__messages {
+        .notification__notifications {
             overflow: scroll;
             top: 47px;
             left: -320px;
@@ -157,6 +157,7 @@ body {
             width: 360px;
             background-color: white;
             box-shadow: 0 0px 5px rgb(194 194 194);
+            border-radius: 10px;
 
             p {
                 background-color: #f1f2f3;
@@ -166,21 +167,21 @@ body {
                 font-weight: bold;
             }
 
-            .message {
+            .notification {
                 height: 70px;
                 width: 100%;
                 word-wrap: break-word;
                 padding: 0 10px;
                 overflow: hidden;
 
-                .message__title {
+                .notification__title {
                     padding-right: 150px;
                     font-size: 16px;
                     display: inline-block;
                     color: #0074cc;
                 }
 
-                .message__date {
+                .notification__date {
                     display: inline-block;
                 }
 

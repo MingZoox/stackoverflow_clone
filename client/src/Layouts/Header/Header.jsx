@@ -46,7 +46,7 @@ function Header() {
                     <div className="header__profile" onClick={handleProfileBtn}>
                         <img src={auth?.avatar}></img>
                     </div>
-                    <HeaderNotification />
+                    <HeaderNotification notifications={auth?.notifications}/>
                     <div className="header__logout" onClick={handleLogoutBtn}>
                         Logout
                     </div>

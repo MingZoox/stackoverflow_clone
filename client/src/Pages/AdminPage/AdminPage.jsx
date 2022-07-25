@@ -1,8 +1,6 @@
-/* eslint-disable jsx-a11y/anchor-is-valid */
 import { useState, useEffect } from "react";
 import AdminPageContent from "./AdminPageContent";
 import { getUsers } from "../../Api/user-api";
-// import { getAllPosts } from "../../Api/question-api";
 import "./AdminPage.scss";
 
 export const Pages = {

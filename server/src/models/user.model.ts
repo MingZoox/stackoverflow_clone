@@ -16,6 +16,11 @@ export interface UserDocument extends mongoose.Document {
     password: string;
     isActive: boolean;
     reputation: number;
+    notifications: Array<{
+        content: String;
+        link: String;
+        date: Date;
+    }>;
     avatar: string;
     about: string;
     role: Role.USER_ROLE | Role.ADMIN_ROLE;
@@ -29,6 +34,13 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     isActive: { type: Boolean, default: true },
     reputation: { type: Number, default: 0 },
+    notifications: [
+        {
+            content: String,
+            link: String,
+            date: Date,
+        },
+    ],
     avatar: {
         type: String,
         default:

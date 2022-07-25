@@ -5,8 +5,9 @@ import env from "../configs/env.config";
 import { getAnswersByQuestionId } from "./answer.service";
 import Comment, { CommentDocument } from "../models/comment.model";
 import Question, { QuestionDocument } from "../models/question.model";
-import { Role } from "../models/user.model";
+import User, { Role, UserDocument } from "../models/user.model";
 import questionSchema from "../utils/validation/question.validation";
+import Answer from "../models/answer.model";
 
 async function addQuestion(req: Request): Promise<ObjectId> {
     req.body.tags = req.body.tags.split(",");
@@ -149,6 +150,9 @@ async function deleteQuestion(req: Request): Promise<ObjectId> {
         req.params.id
     );
     if (!questionDeleted) throw new Error("Couldn't find question");
+
+    await Answer.deleteMany({ question: question._id });
+    await Comment.deleteMany({ question: question._id });
     return question._id;
 }
 
@@ -162,6 +166,12 @@ async function toggleLikeQuestion(req: Request): Promise<ObjectId> {
     } else {
         question.usersLiked.push(req.user._id);
     }
+
+    const userOwnQuestion: UserDocument | null = await User.findById(question.user);
+    if (!userOwnQuestion) throw new Error("Couldn't find user !!");
+
+    userOwnQuestion.reputation += 10;
+    await userOwnQuestion.save();
 
     const questionUpdated: QuestionDocument = await question.save();
     return questionUpdated._id;
@@ -179,6 +189,12 @@ async function toggleDislikeQuestion(req: Request): Promise<ObjectId> {
     } else {
         question.usersDisliked.push(req.user._id);
     }
+
+    const userOwnQuestion: UserDocument | null = await User.findById(question.user);
+    if (!userOwnQuestion) throw new Error("Couldn't find user !!");
+
+    userOwnQuestion.reputation -= 10;
+    await userOwnQuestion.save();
 
     const questionUpdated: QuestionDocument = await question.save();
     return questionUpdated._id;

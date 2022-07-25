@@ -17,12 +17,12 @@ const authen = function (req: Request, res: Response, next: NextFunction) {
         return res.status(401).json({ message: "Unauthorized" });
     }
     jwt.verify(authToken, env.ACCESS_TOKEN_SECRET as string, async (error: any, data: any) => {
-        if (error) return res.sendStatus(403).json({ message: "Forbidden" });
+        if (error) return res.status(403).json({ message: "Forbidden" });
 
-        const user: UserDocument | null = await User.findById(data._id).select(
-            "username email reputation avatar role about"
+        const user: UserDocument | null = await User.findById(data?._id).select(
+            "username email reputation notifications avatar role about"
         );
-        if (!user) return res.sendStatus(403).json({ message: "User invaliad" });
+        if (!user) return res.status(403).json({ message: "User invaliad" });
 
         req.user = user;
         next();

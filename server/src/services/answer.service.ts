@@ -4,25 +4,42 @@ import jwt from "jsonwebtoken";
 import Comment, { CommentDocument } from "../models/comment.model";
 import env from "../configs/env.config";
 import Answer, { AnswerDocument } from "../models/answer.model";
-import { Role } from "../models/user.model";
+import User, { Role, UserDocument } from "../models/user.model";
 import Question, { QuestionDocument } from "../models/question.model";
 
 async function addAnswer(req: Request): Promise<ObjectId> {
     if (req.body.content.length > 1500) throw new Error("Answer no more than 1500 letters");
 
-    const userId: ObjectId = req.user._id;
+    const { user } = req;
 
     const answer: AnswerDocument = new Answer({
         ...req.body,
-        user: userId,
+        user: user._id,
         question: req.params.questionId,
     });
+
+    const question: QuestionDocument | null = await Question.findById(req.params.questionId);
+    if (!question) throw new Error("Couldn't find question !!");
+
+    const userOwnQuestion: UserDocument | null = await User.findById(question.user);
+    if (!userOwnQuestion) throw new Error("Couldn't find question user !!");
 
     const createdAnswer: AnswerDocument = await answer.save();
     if (!createdAnswer) throw new Error("Query to database got error");
 
-    const question: QuestionDocument | null = await Question.findById(req.params.questionId);
-    if (!question) throw new Error("Query to database got error");
+    // add notification
+    if (!req.user._id.equals(userOwnQuestion._id)) {
+        if (userOwnQuestion.notifications.length === 100) {
+            userOwnQuestion.notifications.pop();
+        }
+        userOwnQuestion.notifications.unshift({
+            content: `${user.username} answered your question`,
+            link: `/questions/${req.params.questionId}`,
+            date: createdAnswer.createdAt,
+        });
+
+        await userOwnQuestion.save();
+    }
 
     question.numAnswers += 1;
     await question.save();
@@ -94,6 +111,13 @@ async function deleteAnswer(req: Request): Promise<ObjectId> {
 
     const answerDeleted: AnswerDocument | null = await Answer.findByIdAndDelete(req.params.id);
     if (!answerDeleted) throw new Error("Couldn't find answer");
+
+    const question: QuestionDocument | null = await Question.findById(req.params.questionId);
+    if (!question) throw new Error("Couldn't find question !!");
+
+    question.numAnswers -= 1;
+    await question.save();
+    await Comment.deleteMany({ answer: answer._id });
     return answer._id;
 }
 
@@ -107,6 +131,12 @@ async function toggleLikeAnswer(req: Request): Promise<ObjectId> {
     } else {
         answer.usersLiked.push(req.user._id);
     }
+
+    const userOwnAnswer: UserDocument | null = await User.findById(answer.user);
+    if (!userOwnAnswer) throw new Error("Couldn't find user !!");
+
+    userOwnAnswer.reputation += 10;
+    await userOwnAnswer.save();
 
     const answerUpdated: AnswerDocument = await answer.save();
     return answerUpdated._id;
@@ -122,6 +152,12 @@ async function toggleDislikeAnswer(req: Request): Promise<ObjectId> {
     } else {
         answer.usersDisliked.push(req.user._id);
     }
+
+    const userOwnAnswer: UserDocument | null = await User.findById(answer.user);
+    if (!userOwnAnswer) throw new Error("Couldn't find user !!");
+
+    userOwnAnswer.reputation -= 10;
+    await userOwnAnswer.save();
 
     const answerUpdated: AnswerDocument = await answer.save();
     return answerUpdated._id;

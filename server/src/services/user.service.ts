@@ -7,6 +7,9 @@ import User, { Role, UserDocument } from "../models/user.model";
 import env from "../configs/env.config";
 import * as userSchema from "../utils/validation/user.validation";
 import sendMailService from "../utils/sendMail.utils";
+import Question from "../models/question.model";
+import Answer from "../models/answer.model";
+import Comment from "../models/comment.model";
 
 function validationUser(data: UserDocument, validationSchema: Joi.ObjectSchema<any>): void {
     const userValidation = validationSchema.validate(data);
@@ -105,6 +108,10 @@ async function updateUser(req: Request): Promise<ObjectId> {
 async function deleteUser(req: Request): Promise<ObjectId> {
     const user: UserDocument | null = await User.findByIdAndDelete(req.params.id);
     if (!user) throw new Error("Couldn't delete user");
+
+    await Question.deleteMany({ user: user._id });
+    await Answer.deleteMany({ user: user._id });
+    await Comment.deleteMany({ user: user._id });
     return user._id;
 }
 
@@ -123,7 +130,7 @@ function sendMailForgetPassword(req: Request): void {
     const token = jwt.sign({ email: req.body.email }, env.ACCESS_TOKEN_SECRET as string, {
         expiresIn: "1h",
     });
-    const verifyLink = `http://localhost:8000/users/forget?token=${token}`;
+    const verifyLink = `${env.SERVER_URL}/users/forget?token=${token}`;
     const contentHtml = `<h1>Account Recovery</h1>
     <p>Click on the following link to verify the request. Your password is automatically set to 12345678a</p>
     <p>${verifyLink}</p>
