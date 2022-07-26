@@ -1,6 +1,5 @@
 import { useState, useContext } from "react";
 import { GoogleLogin } from "@react-oauth/google";
-import Cookies from "js-cookie";
 import jwt_decode from "jwt-decode";
 import { handleLogin } from "../../Helpers/handle-login";
 import { loginOAuth, sendForgotPasswordMail, getCurrentUser } from "../../Api/user-api";
@@ -59,7 +58,6 @@ function LoginPage() {
                         const user = jwt_decode(credential);
                         loginOAuth(user.email, user.given_name, user.picture).then((res) => {
                             if (res) {
-                                Cookies.set("Authorization", res.token);
                                 getCurrentUser().then((currentUser) => {
                                     setAuth(currentUser);
                                 });

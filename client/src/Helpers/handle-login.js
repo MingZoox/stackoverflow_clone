@@ -1,4 +1,3 @@
-import Cookies from "js-cookie";
 import userSchema from "./validation-user";
 import { login, getCurrentUser } from "../Api/user-api";
 
@@ -12,9 +11,8 @@ export const handleLogin = (email, password, setAuth, navigate, location) => {
             password: password,
         })
         .then((response) => {
-            login(email, password).then((responseData) => {
-                if (responseData?.token) {
-                    Cookies.set("Authorization", responseData.token);
+            login(email, password).then((res) => {
+                if (res) {
                     getCurrentUser().then((currentUser) => {
                         setAuth(currentUser);
                     });

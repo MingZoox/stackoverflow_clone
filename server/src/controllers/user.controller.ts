@@ -15,7 +15,12 @@ const addUser = async function (req: Request, res: Response) {
 const userLogin = async function (req: Request, res: Response) {
     try {
         const token = await userServices.loginUser(req);
-        return res.status(200).json({ token });
+        return res
+            .cookie("Authorization", token, {
+                httpOnly: true,
+            })
+            .status(200)
+            .json("Logged in successfully");
     } catch (error: any) {
         if (error.message) return res.status(400).json({ message: error.message });
         return res.status(500).json(error);
@@ -25,7 +30,12 @@ const userLogin = async function (req: Request, res: Response) {
 const userLoginOAuth = async function (req: Request, res: Response) {
     try {
         const token = await userServices.loginUserOAuth(req);
-        return res.status(200).json({ token });
+        return res
+            .cookie("Authorization", token, {
+                httpOnly: true,
+            })
+            .status(200)
+            .json("Logged in successfully");
     } catch (error: any) {
         if (error.message) return res.status(400).json({ message: error.message });
         return res.status(500).json(error);

@@ -109,7 +109,7 @@ export const getCurrentUser = async () => {
         const { data } = await axios.get("users/me");
         return data;
     } catch (error) {
-        error.response.data?.message && alert(error.response.data?.message);
+        console.log(error.response.data?.message);
     }
 };
 

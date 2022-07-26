@@ -18,16 +18,14 @@ import RequireAuth from "./Auth/RequireAuth";
 import { Routes, Route } from "react-router-dom";
 import { getCurrentUser } from "./Api/user-api";
 import AuthContext from "./Auth/AuthProvider";
-import Cookies from "js-cookie";
 
 function App() {
     const { setAuth } = useContext(AuthContext);
 
     useEffect(() => {
-        Cookies.get("Authorization") &&
-            getCurrentUser().then((currentUser) => {
-                setAuth(currentUser);
-            });
+        getCurrentUser().then((currentUser) => {
+            setAuth(currentUser);
+        });
     }, []);
 
     return (
