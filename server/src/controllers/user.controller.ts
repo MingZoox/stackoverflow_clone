@@ -18,6 +18,7 @@ const userLogin = async function (req: Request, res: Response) {
         return res
             .cookie("Authorization", token, {
                 httpOnly: true,
+                maxAge: 24 * 60 * 60 * 1000,
             })
             .status(200)
             .json("Logged in successfully");
@@ -33,6 +34,7 @@ const userLoginOAuth = async function (req: Request, res: Response) {
         return res
             .cookie("Authorization", token, {
                 httpOnly: true,
+                maxAge: 24 * 60 * 60 * 1000,
             })
             .status(200)
             .json("Logged in successfully");
@@ -40,6 +42,10 @@ const userLoginOAuth = async function (req: Request, res: Response) {
         if (error.message) return res.status(400).json({ message: error.message });
         return res.status(500).json(error);
     }
+};
+
+const userLogout = async function (req: Request, res: Response) {
+    return res.clearCookie("Authorization").status(200).json("Logout success !!");
 };
 
 const getUser = async function (req: Request, res: Response) {
@@ -121,6 +127,7 @@ export {
     addUser,
     userLogin,
     userLoginOAuth,
+    userLogout,
     getCurrentUser,
     getUser,
     getUsersPagination,

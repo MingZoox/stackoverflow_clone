@@ -1,8 +1,8 @@
 import { useNavigate, Link } from "react-router-dom";
-import Cookies from "js-cookie";
 import React, { useContext } from "react";
 import AuthContext from "../../Auth/AuthProvider";
 import HeaderNotification from "./HeaderNotification";
+import { logout } from "../../Api/user-api";
 import "./Header.scss";
 
 function Header() {
@@ -15,10 +15,13 @@ function Header() {
 
     function handleLogoutBtn() {
         if (window.confirm("Are you sure you want to log out ?")) {
-            setAuth({});
-            Cookies.remove("Authorization");
-            alert("Logout success");
-            navigate("/");
+            logout().then((res) => {
+                if (res) {
+                    setAuth({});
+                    alert("Logout success");
+                    navigate("/");
+                }
+            });
         }
     }
 
@@ -46,7 +49,7 @@ function Header() {
                     <div className="header__profile" onClick={handleProfileBtn}>
                         <img src={auth?.avatar}></img>
                     </div>
-                    <HeaderNotification notifications={auth?.notifications}/>
+                    <HeaderNotification notifications={auth?.notifications} />
                     <div className="header__logout" onClick={handleLogoutBtn}>
                         Logout
                     </div>

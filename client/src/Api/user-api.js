@@ -29,6 +29,15 @@ export const loginOAuth = async (email, username, avatar) => {
     }
 };
 
+export const logout = async () => {
+    try {
+        const { data } = await axios.put("users/logout");
+        return data;
+    } catch (error) {
+        error.response.data?.message && alert(error.response.data?.message);
+    }
+};
+
 export const signup = async (displayname, email, password) => {
     const payload = new URLSearchParams({
         username: displayname,

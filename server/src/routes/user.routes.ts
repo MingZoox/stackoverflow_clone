@@ -15,6 +15,7 @@ userRouter.post("/users/login/oauth", userControllers.userLoginOAuth);
 userRouter.post("/users/forget", userControllers.sendMailForgetPassword);
 userRouter.post("/users/register", userControllers.addUser);
 
+userRouter.put("/users/logout", authen, userControllers.userLogout);
 userRouter.put("/users/avatar", authen, uploadFileMiddleware, userControllers.uploadAvatar);
 userRouter.put("/users/:id", authen, userControllers.updateUser);
 
