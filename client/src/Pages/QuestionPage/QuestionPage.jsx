@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
 import Sidebar from "../../Layouts/Sidebar/Sidebar";
 import Answer from "./Answer";
+import Chat from "./Chat";
 import "./QuestionPage.scss";
 import AuthContext from "../../Auth/AuthProvider";
 import {
@@ -12,8 +13,11 @@ import {
     updateQuestion,
     deleteQuestion,
 } from "../../Api/question-api";
+import io from "socket.io-client";
 import { addAnswer } from "../../Api/answer-api";
 import { addComment, updateComment, deleteComment } from "../../Api/comment-api";
+
+const socket = io.connect("http://localhost:8000");
 
 function QuestionPage() {
     const { questionId } = useParams();
@@ -27,6 +31,7 @@ function QuestionPage() {
     const [commentIdEditing, setCommentIdEditing] = useState(null);
     const [questionEditing, setQuestionEditing] = useState("");
     const [postAnswer, setPostAnswer] = useState("");
+    const [showChat, setShowChat] = useState(false);
 
     useEffect(() => {
         getQuestion(questionId).then((res) => {
@@ -110,15 +115,36 @@ function QuestionPage() {
         setQuestionEditing(value);
     }
 
+    function handleShowChat() {
+        setShowChat(true);
+        socket.emit("join_room", questionId);
+    }
+
     return (
         <div className="question-page">
             <Sidebar />
+
+            {showChat && (
+                <Chat
+                    socket={socket}
+                    username={auth?.username}
+                    room={questionId}
+                    setShowChat={setShowChat}
+                />
+            )}
+
             <div className="question-page__content">
                 <div className="question-page__header">
                     <div className="question-page__title">{question.title}</div>
                     <div className="ask-question-btn">
                         <Link to="/questions/ask">Ask Question</Link>
                     </div>
+                    {auth?._id && (
+                        <div className="ask-question-btn" onClick={handleShowChat}>
+                            Live Chat
+                        </div>
+                    )}
+
                     <div className="question-page__created-at">
                         Asked {question.createdAt?.slice(0, 10)}
                     </div>

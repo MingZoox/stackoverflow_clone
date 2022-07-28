@@ -34,8 +34,11 @@ async function getQuestion(req: Request): Promise<object> {
     if (!question) throw new Error("Couldn't find question");
 
     // get user id to check has current user liked or not
+    let userAuthenticated: any = null;
     const authToken: string = req.cookies.Authorization;
-    const userAuthenticated: any = jwt.verify(authToken, env.ACCESS_TOKEN_SECRET as string);
+    if (authToken) {
+        userAuthenticated = jwt.verify(authToken, env.ACCESS_TOKEN_SECRET as string);
+    }
 
     // get comments by question id
     const comments: Array<CommentDocument> = await Comment.find({
@@ -56,8 +59,10 @@ async function getQuestion(req: Request): Promise<object> {
         answers,
         createdAt: question.createdAt,
         likes: question.usersLiked.length - question.usersDisliked.length,
-        hasCurrentUserLiked: question.usersLiked.includes(userAuthenticated._id),
-        hasCurrentUserDisliked: question.usersDisliked.includes(userAuthenticated._id),
+        hasCurrentUserLiked:
+            userAuthenticated && question.usersLiked.includes(userAuthenticated._id),
+        hasCurrentUserDisliked:
+            userAuthenticated && question.usersDisliked.includes(userAuthenticated._id),
     };
 
     return questionDTO;
@@ -88,7 +93,7 @@ async function getQuestionsPagination(
     } else if (order === "score") {
         questions = await Question.find()
             .populate("user", "username avatar")
-            .select("title tags content usersLiked usersDisLiked numAnswers");
+            .select("title tags content usersLiked usersDisliked numAnswers");
         questions.sort(
             (questionA, questionB) => questionB.usersLiked.length - questionA.usersDisliked.length
         );
@@ -96,7 +101,7 @@ async function getQuestionsPagination(
     } else if (order === "unanswered") {
         questions = await Question.find()
             .populate("user", "username avatar")
-            .select("title tags content usersLiked usersDisLiked numAnswers");
+            .select("title tags content usersLiked usersDisliked numAnswers");
         questions.sort((questionA, questionB) => questionA.numAnswers - questionB.numAnswers);
         questions = questions.slice((page - 1) * limit, (page - 1) * limit + limit);
     }

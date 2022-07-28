@@ -53,8 +53,11 @@ async function getAnswersByQuestionId(req: Request, questionId: ObjectId): Promi
     }).populate("user", "username avatar reputation");
 
     // get user id to check has current user liked or not
+    let userAuthenticated: any = null;
     const authToken: string = req.cookies.Authorization;
-    const userAuthenticated: any = jwt.verify(authToken, env.ACCESS_TOKEN_SECRET as string);
+    if (authToken) {
+        userAuthenticated = jwt.verify(authToken, env.ACCESS_TOKEN_SECRET as string);
+    }
 
     const answersDTO: Array<object> = await Promise.all(
         answers.map(async (answer): Promise<object> => {
@@ -72,8 +75,10 @@ async function getAnswersByQuestionId(req: Request, questionId: ObjectId): Promi
                 comments,
                 likes: answer.usersLiked.length - answer.usersDisliked.length,
                 createdAt: answer.createdAt,
-                hasCurrentUserLiked: answer.usersLiked.includes(userAuthenticated._id),
-                hasCurrentUserDisliked: answer.usersDisliked.includes(userAuthenticated._id),
+                hasCurrentUserLiked:
+                    userAuthenticated && answer.usersLiked.includes(userAuthenticated._id),
+                hasCurrentUserDisliked:
+                    userAuthenticated && answer.usersDisliked.includes(userAuthenticated._id),
             };
         })
     );

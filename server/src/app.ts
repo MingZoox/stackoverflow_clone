@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import env from "./configs/env.config";
+import socketConfig from "./configs/socket.config";
 import "./configs/db.config";
 import router from "./routes";
 
@@ -20,6 +21,8 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(router);
 
-app.listen(env.PORT, () => {
+const httpServer = app.listen(env.PORT, () => {
     console.log(`Application is running on ${env.PORT?.toString()}`);
 });
+
+socketConfig(httpServer);
