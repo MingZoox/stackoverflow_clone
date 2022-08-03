@@ -17,7 +17,7 @@ import io from "socket.io-client";
 import { addAnswer } from "../../Api/answer-api";
 import { addComment, updateComment, deleteComment } from "../../Api/comment-api";
 
-const socket = io.connect("http://localhost:8000");
+const socket = io.connect("https://bbstackoverflow.herokuapp.com");
 
 function QuestionPage() {
     const { questionId } = useParams();

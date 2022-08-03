@@ -18,7 +18,7 @@ function HeaderNotification({ notifications }) {
     return (
         <div className="header__notification">
             <img
-                src="https://uxwing.com/wp-content/themes/uxwing/download/37-communication-chat-call/bell.png"
+                src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/97/OOjs_UI_icon_bell.svg/1024px-OOjs_UI_icon_bell.svg.png"
                 onClick={handleNotificationView}></img>
 
             {notificationView && (

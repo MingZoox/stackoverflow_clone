@@ -42,7 +42,7 @@ async function getQuestionsByTag(
 
     const questions: QuestionDocument[] | null = await Question.find({ tags: tagRequest })
         .populate("user", "username avatar")
-        .select("title usersLiked tags")
+        .select("title usersLiked usersDisliked tags numAnswers")
         .limit(limit)
         .skip((page - 1) * limit);
     if (!questions) throw new Error("Query to database got error");

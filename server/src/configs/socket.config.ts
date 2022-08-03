@@ -1,9 +1,10 @@
 import { Server } from "socket.io";
+import env from "./env.config";
 
 function socketConfig(httpServer: any) {
     const io = new Server(httpServer, {
         cors: {
-            origin: "http://localhost:3000",
+            origin: env.CLIENT_URL,
             methods: ["GET", "POST"],
         },
     });

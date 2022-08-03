@@ -88,7 +88,11 @@ export const addUser = async (userInfo) => {
 };
 
 export const updateProfile = async (profileUploaded, avatar) => {
-    const payload = new URLSearchParams(profileUploaded);
+    const payload = new URLSearchParams({
+        username: profileUploaded.username,
+        password: profileUploaded.password,
+        about: profileUploaded.about,
+    });
 
     try {
         if (avatar) {
@@ -96,7 +100,7 @@ export const updateProfile = async (profileUploaded, avatar) => {
             data.append("file", avatar);
             await axios.put(`users/avatar`, data);
         }
-        const { data } = await axios.put(`users/${profileUploaded._id || "empty"}`, payload);
+        const { data } = await axios.put(`users/${profileUploaded._id}`, payload);
         return data;
     } catch (error) {
         if (error.response.status === 413) alert("Image too large !!");

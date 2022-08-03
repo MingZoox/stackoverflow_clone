@@ -7,7 +7,7 @@ import { GoogleOAuthProvider } from "@react-oauth/google";
 import axios from "axios";
 
 const GOOGLE_CLIENT_ID = "108280594432-omqmp01tkniis47snett8h6ncajf3fsq.apps.googleusercontent.com";
-const SERVER_URL = "http://localhost:8000";
+const SERVER_URL = "http://localhost:8000/api";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = SERVER_URL;

@@ -4,7 +4,9 @@ dotenv.config();
 
 interface ENV {
     PORT: string | undefined;
+    NODE_ENV: string | undefined;
     SERVER_URL: string | undefined;
+    CLIENT_URL: string | undefined;
     DB_URI: string | undefined;
     ALLOW_ORIGIN: string | undefined;
     ACCESS_TOKEN_SECRET: string | undefined;
@@ -18,7 +20,9 @@ interface ENV {
 const envConfig: ENV = {
     PORT: process.env.PORT,
     DB_URI: process.env.DB_URI,
+    NODE_ENV: process.env.NODE_ENV,
     SERVER_URL: process.env.SERVER_URL,
+    CLIENT_URL: process.env.CLIENT_URL,
     ALLOW_ORIGIN: process.env.ALLOW_ORIGIN,
     ACCESS_TOKEN_SECRET: process.env.ACCESS_TOKEN_SECRET,
     AZURE_CONNECTION_STRING: process.env.AZURE_CONNECTION_STRING,
