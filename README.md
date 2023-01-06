@@ -1,7 +1,7 @@
 # StackOverFlow Clone
 
 ## [My Live Website](https://bbstackoverflow.herokuapp.com/)
-(pretty lag, need some refresh to work)
+(Due to my blob azure be deleted the avatar feature currently not working)
 
 ![Design preview](design%20preview.png)
 
