@@ -1,7 +1,9 @@
 # StackOverFlow Clone
 
 ## [My Live Website](https://bbstackoverflow.herokuapp.com/)
-(Due to my blob azure be deleted the avatar feature currently not working)
+
+## Server down due to Heroku no longer free anymore so I have basic demo in link video below
+https://www.youtube.com/watch?v=mgFaJ0WYf_4
 
 ![Design preview](design%20preview.png)
 
